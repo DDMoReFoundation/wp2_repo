@@ -3,16 +3,15 @@
  ******************************************************************************/
 package eu.ddmore.converter.mdl2json
 
-import static org.junit.Assert.*
-
 import static eu.ddmore.converter.mdl2json.MdlAndJsonFileUtils.*
 import static eu.ddmore.converter.mdl2json.testutils.MdlFileContentTestUtils.*
+import static org.junit.Assert.*
 
-import eu.ddmore.converter.mdl2json.domain.Mcl
 import org.apache.commons.io.FileUtils
-import org.apache.commons.lang.StringUtils
 import org.apache.log4j.Logger
 import org.junit.Test
+
+import eu.ddmore.converter.mdl2json.domain.Mcl
 
 class EndToEndIntegrationTest {
     private static final Logger LOGGER = Logger.getLogger(EndToEndIntegrationTest.class)
@@ -74,7 +73,7 @@ class EndToEndIntegrationTest {
     }
     
     /**
-     * The JSON file "FullyPopulated.json" was created by reading in the above-mentioned
+     * The JSON file "FullyPopulated.output.json" was created by reading in the above-mentioned
      * "FullyPopulated.mdl" file into R (via the MDL->JSON converter) and writing it back
      * out to JSON. Hence this test is a form of end-to-end integration test testing a
      * full MDL->JSON->R->JSON->MDL pipeline.

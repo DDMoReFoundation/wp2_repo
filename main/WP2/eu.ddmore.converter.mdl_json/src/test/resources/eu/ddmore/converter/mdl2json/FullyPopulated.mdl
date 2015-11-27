@@ -148,7 +148,7 @@ fully_populated_mdl = mdlObj {
      lnLAMBDA=ln(indiv_BASE) + POP_TLAG*CL
      LAMBDA = exp(lnLAMBDA)
      CC = if (T - DT < TLAG) then 0
-          elseif (T - DT == TLAG) then 1
+          if (T - DT == TLAG) then 1
           else (D/V) * KA/(KA-T) * (exp(-(T -DT-TLAG))- exp(-KA*(T-DT-TLAG)))
    
      DEQ {
