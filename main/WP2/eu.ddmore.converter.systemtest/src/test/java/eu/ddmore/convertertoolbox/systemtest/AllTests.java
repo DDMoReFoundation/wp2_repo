@@ -17,11 +17,9 @@ import org.junit.runners.Suite.SuiteClasses;
 @RunWith(Suite.class)
 @SuiteClasses({
     MdlToPharmmlModelsTest.class,
-//  Temporarily commented out until pharmML 0.8 support is added
-//    PharmmlToNmtranModelsTest.class,
+    PharmmlToNmtranModelsTest.class,
     MdlToJsonModelsTest.class,
     MdlToJsonToMdlModelsTest.class,
-//  Temporarily commented out until pharmML 0.8 support is added
-//    GeneratedPharmmlToNmtranModelsTest.class
+    GeneratedPharmmlToNmtranModelsTest.class
 })
 public class AllTests {}

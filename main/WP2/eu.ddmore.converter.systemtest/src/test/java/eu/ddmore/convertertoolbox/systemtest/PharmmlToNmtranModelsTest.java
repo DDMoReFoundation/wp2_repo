@@ -7,6 +7,7 @@ import java.io.File;
 
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -56,7 +57,8 @@ public class PharmmlToNmtranModelsTest extends ConverterATParent {
     public PharmmlToNmtranModelsTest(File workingDirectory, String model, File testDataDir) {
         super(workingDirectory, model, testDataDir);
     }
-    
+
+    @Ignore ("Temporarily ignored until full PharmML 0.8 support is added")
     @Test
     public void convertsPharmMLToNMTRAN() {
         new ConverterRunner(

@@ -6,6 +6,7 @@ import java.util.List;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
+import org.junit.Ignore;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -77,7 +78,8 @@ public class GeneratedPharmmlToNmtranModelsTest extends ConverterATParent {
     public GeneratedPharmmlToNmtranModelsTest(File workingDirectory, String model, File testDataDir) {
         super(workingDirectory, model, testDataDir);
     }
-    
+
+    @Ignore ("Temporarily ignored until full PharmML 0.8 support is added")
     @Test
     public void convertPharmMLGeneratedByMdlToPharmMLConversionToNMTRAN() {
         File modelFile = getModelAbsoluteFile();
