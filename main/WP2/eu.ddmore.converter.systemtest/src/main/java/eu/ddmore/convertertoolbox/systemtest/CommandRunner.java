@@ -64,13 +64,13 @@ public class CommandRunner {
     
     public File getStdOut() {
         Preconditions.checkState(workingDirectory!=null, "Working Directory must be set before standard output file path can be produced");
-        Preconditions.checkState(name!=null, "Working Directory must be set before standard output file path can be produced");
+        Preconditions.checkState(name!=null, "Name of the executor must be set before standard output file path can be produced");
         return new File(workingDirectory, name + "." + STDOUT_FILE_EXT);
     }
     
     public File getStdErr() {
         Preconditions.checkState(workingDirectory!=null, "Working Directory must be set before standard error file path can be produced");
-        Preconditions.checkState(name!=null, "Working Directory must be set before standard error file path can be produced");
+        Preconditions.checkState(name!=null, "Name of the executor must be set before standard error file path can be produced");
         return new File(workingDirectory, name + "." + STDERR_FILE_EXT);
     }
     
