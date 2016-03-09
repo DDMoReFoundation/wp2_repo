@@ -19,6 +19,7 @@ import com.google.common.collect.Lists;
 /**
  * Run PharmML -> NMTRAN conversions over the testdata models within the "PharmML" subdirectory.
  */
+@Ignore("MDL to PharmML conversion is now supported and testing hand-crafted PharmML is redundant.")
 @RunWith(ParallelizedRunner.class)
 public class PharmmlToNmtranModelsTest extends ConverterATParent {
     private final static Logger LOG = Logger.getLogger(PharmmlToNmtranModelsTest.class);
