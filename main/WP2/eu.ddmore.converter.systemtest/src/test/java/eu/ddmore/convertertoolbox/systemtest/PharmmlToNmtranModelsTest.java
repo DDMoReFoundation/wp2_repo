@@ -58,7 +58,6 @@ public class PharmmlToNmtranModelsTest extends ConverterATParent {
         super(workingDirectory, model, testDataDir);
     }
 
-    @Ignore ("Temporarily ignored until full PharmML 0.8 support is added")
     @Test
     public void convertsPharmMLToNMTRAN() {
         new ConverterRunner(

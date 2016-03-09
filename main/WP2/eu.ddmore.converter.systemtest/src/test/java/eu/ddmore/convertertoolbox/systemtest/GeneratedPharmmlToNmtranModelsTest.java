@@ -79,7 +79,6 @@ public class GeneratedPharmmlToNmtranModelsTest extends ConverterATParent {
         super(workingDirectory, model, testDataDir);
     }
 
-    @Ignore ("Temporarily ignored until full PharmML 0.8 support is added")
     @Test
     public void convertPharmMLGeneratedByMdlToPharmMLConversionToNMTRAN() {
         File modelFile = getModelAbsoluteFile();
