@@ -136,7 +136,7 @@ public class MDLToPharmMLConverterIntegrationTest {
     public void testPerformConvertForMdlFileWithUnsupportedFeatureWarningsThatShouldBeTreatedAsErrors() throws IOException {
         assertFalse("Converted PharmML file should not initially exist", unsupportedFeaturePharmmlFile.exists());
         final ConversionReport report = converter.performConvert(unsupportedFeatureMdlFile, workingFolder.getRoot());
-        assertEquals("Checking for successful return code", ConversionCode.FAILURE, report.getReturnCode());
+        assertEquals("Checking for failure return code", ConversionCode.FAILURE, report.getReturnCode());
         assertFalse("No converted PharmML file should have been created", unsupportedFeaturePharmmlFile.exists());
         final List<ConversionDetail> errors = report.getDetails(Severity.ERROR);
         assertEquals("Checking that 1 error was returned", 1, errors.size());
