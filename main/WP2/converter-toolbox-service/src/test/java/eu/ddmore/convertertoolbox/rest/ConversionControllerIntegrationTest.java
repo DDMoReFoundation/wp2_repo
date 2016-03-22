@@ -259,7 +259,8 @@ public class ConversionControllerIntegrationTest {
             ObjectMapper mapper = new ObjectMapper();
             try {
                 Map<?,?> body = mapper.readValue(ex.getResponseBodyAsString(),Map.class);
-                assertEquals("Requested conversion from C 1.0.0-Q to D 1.0.0-Q is not supported",body.get("message"));
+                System.out.println(body);
+                assertEquals("Unsupported conversion",body.get("message"));
             } catch (Exception e) {
                 throw e;
             }

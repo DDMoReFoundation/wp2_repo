@@ -65,7 +65,7 @@ public class RestClientConfiguration {
         ObjectMapper halObjectMapper = new ObjectMapper();
         halObjectMapper.registerModule(new Jackson2HalModule());
         halObjectMapper
-                .setHandlerInstantiator(new Jackson2HalModule.HalHandlerInstantiator(delegatingRelProvider, null));
+                .setHandlerInstantiator(new Jackson2HalModule.HalHandlerInstantiator(delegatingRelProvider, null, null));
  
         MappingJackson2HttpMessageConverter halConverter = new MappingJackson2HttpMessageConverter();
         halConverter.setSupportedMediaTypes(Arrays.asList(MediaTypes.HAL_JSON));
