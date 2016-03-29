@@ -16,21 +16,22 @@
             </includes>
         </fileSet>
         <fileSet>
-            <directory>target/../src/main/runtime</directory>
+            <directory>src/main/runtime</directory>
             <outputDirectory>converter-toolbox-service</outputDirectory>
             <includes>
                 <include>**/*</include>
             </includes>
             <excludes>
                 <exclude>service.conf</exclude>
+                <exclude>keystore/*</exclude>
             </excludes>
             <filtered>true</filtered>
         </fileSet>
         <fileSet>
-            <directory>target/classes</directory>
-            <outputDirectory>converter-toolbox-service</outputDirectory>
+            <directory>src/main/runtime/keystore</directory>
+            <outputDirectory>converter-toolbox-service/keystore</outputDirectory>
             <includes>
-                <include>application.properties</include>
+                <include>**/*</include>
             </includes>
         </fileSet>
         <fileSet>
