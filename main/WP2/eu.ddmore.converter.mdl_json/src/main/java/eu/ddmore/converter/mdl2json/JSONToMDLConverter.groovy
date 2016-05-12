@@ -35,6 +35,7 @@ public class JSONToMDLConverter implements ConverterProvider {
     /**
      * Converter Toolbox required entry point.
      */
+	@Override
     public ConversionReport performConvert(File src, File outputDirectory) throws IOException {
         String outputFileName = computeOutputFileName(src.getName())
 
@@ -65,7 +66,6 @@ public class JSONToMDLConverter implements ConverterProvider {
         }
     }
 
-    @Override
     public ConversionReport[] performConvert(File[] src, File outputDirectory) throws IOException {
         ConversionReport[] reports = new ConversionReport[src.length];
         int i = 0;

@@ -37,6 +37,7 @@ public class MDLToJSONConverter implements ConverterProvider {
     /**
      * Converter Toolbox required entry point.
      */
+	@Override
     public ConversionReport performConvert(File src, File outputDirectory) throws IOException {
         // We know we're going to return a conversion report so create it up front; it is added to at various places in this method
         final ConversionReport report = new ConversionReportImpl()
@@ -87,7 +88,6 @@ public class MDLToJSONConverter implements ConverterProvider {
         }
     }
 
-    @Override
     public ConversionReport[] performConvert(File[] src, File outputDirectory) throws IOException {
         ConversionReport[] reports = new ConversionReport[src.length];
         int i = 0;
