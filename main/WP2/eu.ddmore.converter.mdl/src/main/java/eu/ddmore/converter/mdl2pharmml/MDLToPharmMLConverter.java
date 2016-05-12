@@ -27,7 +27,7 @@ import eu.ddmore.convertertoolbox.domain.VersionImpl;
 import eu.ddmore.mdl.MdlStandaloneSetup;
 import eu.ddmore.mdl.mdl.Mcl;
 import eu.ddmore.mdl.mdl.MclObject;
-import eu.ddmore.mdl.utils.MclUtils;
+import eu.ddmore.mdl.utils.MdlUtils;
 
 import eu.ddmore.converter.mdl2pharmml08.Mdl2Pharmml;
 
@@ -63,7 +63,7 @@ public class MDLToPharmMLConverter implements ConverterProvider {
         
         if (validator.validate(resource, report)) {
         
-            MclUtils mclUtils = new MclUtils();
+            MdlUtils mclUtils = new MdlUtils();
             Mcl mcl = (Mcl) resource.getContents().get(0);
             Iterable<MclObject> mogs = mclUtils.getMogObjects(mcl);
     
