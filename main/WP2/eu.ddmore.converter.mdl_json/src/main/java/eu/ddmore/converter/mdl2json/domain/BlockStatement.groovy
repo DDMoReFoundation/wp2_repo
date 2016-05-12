@@ -5,9 +5,6 @@ package eu.ddmore.converter.mdl2json.domain
 
 import org.apache.log4j.Logger
 
-import eu.ddmore.mdl.mdl.BlockArgument
-import eu.ddmore.mdl.mdl.ValuePair
-
 
 /**
  * Represents {@link eu.ddmore.mdl.mdl.BlockStatement} for MDL <-> JSON conversion.
