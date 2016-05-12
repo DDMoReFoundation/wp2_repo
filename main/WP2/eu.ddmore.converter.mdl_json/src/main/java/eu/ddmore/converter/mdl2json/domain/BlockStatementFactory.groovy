@@ -6,7 +6,6 @@ package eu.ddmore.converter.mdl2json.domain
 import com.google.common.base.Preconditions
 
 import eu.ddmore.converter.mdl2json.domain.BlockStatement.EBlockStatementType
-import eu.ddmore.mdl.mdl.BlockArgument
 import eu.ddmore.mdl.mdl.ValuePair
 import eu.ddmore.mdl.utils.MdlExpressionConverter
 
@@ -36,7 +35,7 @@ public class BlockStatementFactory {
     private static Map<String, String> getBlockArgumentsAsMap(final eu.ddmore.mdl.mdl.BlockStatement blkStatement) {
         if (blkStatement.getBlkArgs().getArgs()) {
             final Map<String, String> blkArgsMap = [:]
-            blkStatement.getBlkArgs().getArgs().collect { BlockArgument blkArg ->
+            blkStatement.getBlkArgs().getArgs().collect { blkArg -> // TODO: Did have BlockArgument type before - Rework this
                 if (blkArg instanceof ValuePair) {
                     blkArgsMap.put(((ValuePair) blkArg).getArgumentName(), MdlExpressionConverter.convertToString(((ValuePair) blkArg).getExpression()))
                 } else {

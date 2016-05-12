@@ -39,9 +39,10 @@ public class RandomVariableDefinition extends AbstractStatement {
     public RandomVariableDefinition(final eu.ddmore.mdl.mdl.RandomVariableDefinition randomVarDefn) {
         setProperty(PROPERTY_SUBTYPE, EStatementSubtype.RandomVarDefinition.getIdentifierString())
         setProperty(PROPERTY_NAME, randomVarDefn.getName())
-        final eu.ddmore.mdl.mdl.BuiltinFunctionCall distn = randomVarDefn.getDistn();
-        setProperty(PROPERTY_DIST_TYPE, distn.getFunc())
-        setProperty(PROPERTY_ARGS, KeyValuePairConverter.toMap(distn.getArgList()))
+// TODO: Commented out as BuiltinFunctionCall no longer exists - rework this
+//        final eu.ddmore.mdl.mdl.BuiltinFunctionCall distn = randomVarDefn.getDistn();
+//        setProperty(PROPERTY_DIST_TYPE, distn.getFunc())
+//        setProperty(PROPERTY_ARGS, KeyValuePairConverter.toMap(distn.getArgList()))
     }
     
     /**

@@ -4,7 +4,6 @@
 package eu.ddmore.converter.mdl2json.domain
 
 import eu.ddmore.converter.mdl2json.utils.KeyValuePairConverter;
-import eu.ddmore.mdl.mdl.BuiltinFunctionCall;
 import eu.ddmore.mdl.mdl.FuncArguments
 import eu.ddmore.mdl.mdl.NamedFuncArguments;
 import eu.ddmore.mdl.utils.MdlExpressionConverter
@@ -40,13 +39,15 @@ public class EquationDefinition extends AbstractStatement {
         setProperty(PROPERTY_SUBTYPE, EStatementSubtype.EquationDefinition.getIdentifierString())
         setProperty(PROPERTY_NAME, eqnDefn.getName())
         if (eqnDefn.getExpression()) {
-            if (eqnDefn.getExpression() instanceof BuiltinFunctionCall && ((BuiltinFunctionCall) eqnDefn.getExpression()).getArgList() instanceof NamedFuncArguments) {
-                // This is really only for OBSERVATION block items, where it is nice to parse the combinedError function call and its arguments rather than these being a single string
-                setProperty(PROPERTY_FUNCNAME, ((BuiltinFunctionCall) eqnDefn.getExpression()).getFunc())
-                setProperty(PROPERTY_FUNCARGS, KeyValuePairConverter.toMap(((BuiltinFunctionCall) eqnDefn.getExpression()).getArgList()))
-            } else {
+
+// TODO: Commented out since BuiltinFunctionCall no longer exists - rework this
+//            if (eqnDefn.getExpression() instanceof BuiltinFunctionCall && ((BuiltinFunctionCall) eqnDefn.getExpression()).getArgList() instanceof NamedFuncArguments) {
+//                // This is really only for OBSERVATION block items, where it is nice to parse the combinedError function call and its arguments rather than these being a single string
+//                setProperty(PROPERTY_FUNCNAME, ((BuiltinFunctionCall) eqnDefn.getExpression()).getFunc())
+//                setProperty(PROPERTY_FUNCARGS, KeyValuePairConverter.toMap(((BuiltinFunctionCall) eqnDefn.getExpression()).getArgList()))
+//            } else {
                 setProperty(PROPERTY_EXPRESSION, MdlExpressionConverter.convertToString(eqnDefn.getExpression()))
-            }
+//            }
         }
     }
     
