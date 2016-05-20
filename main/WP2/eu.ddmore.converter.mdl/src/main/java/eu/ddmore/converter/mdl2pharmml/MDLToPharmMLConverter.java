@@ -6,16 +6,19 @@ package eu.ddmore.converter.mdl2pharmml;
 import java.io.File;
 import java.io.IOException;
 import java.util.Iterator;
+import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.eclipse.emf.common.util.URI;
 import org.eclipse.emf.ecore.resource.Resource;
+import org.eclipse.emf.ecore.resource.URIConverter;
 import org.eclipse.xtext.resource.XtextResource;
 import org.eclipse.xtext.resource.XtextResourceSet;
 
 import com.google.inject.Injector;
 
+import eu.ddmore.converter.mdl2pharmml08.Mdl2Pharmml;
 import eu.ddmore.convertertoolbox.api.domain.LanguageVersion;
 import eu.ddmore.convertertoolbox.api.domain.Version;
 import eu.ddmore.convertertoolbox.api.response.ConversionReport;
@@ -27,9 +30,8 @@ import eu.ddmore.convertertoolbox.domain.VersionImpl;
 import eu.ddmore.mdl.MdlStandaloneSetup;
 import eu.ddmore.mdl.mdl.Mcl;
 import eu.ddmore.mdl.mdl.MclObject;
+import eu.ddmore.mdl.scoping.MdlImportURIGlobalScopeProvider;
 import eu.ddmore.mdl.utils.MdlUtils;
-
-import eu.ddmore.converter.mdl2pharmml08.Mdl2Pharmml;
 
 public class MDLToPharmMLConverter implements ConverterProvider {
 
@@ -53,9 +55,11 @@ public class MDLToPharmMLConverter implements ConverterProvider {
         // We know we're going to return a conversion report so create it up front; it is added to at various places in this method
         final ConversionReport report = new ConversionReportImpl();
         
+        new eu.ddmore.mdllib.MdlLibStandaloneSetup().createInjectorAndDoEMFRegistration();
         final Injector injector = new MdlStandaloneSetup().createInjectorAndDoEMFRegistration();
         final XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
         resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+        registerURIMappingsForImplicitImports(resourceSet);
         
         final MDLValidator validator = injector.getInstance(MDLValidator.class);
 
@@ -120,5 +124,23 @@ public class MDLToPharmMLConverter implements ConverterProvider {
     public String toString() {
         return String.format("MDLToPharmMLConverter [source=%s, target=%s, converterVersion=%s]", source, target, converterVersion);
     }
+    
+	private static void registerURIMappingsForImplicitImports(XtextResourceSet resourceSet) {
+		URIConverter uriConverter = resourceSet.getURIConverter();
+		Map<URI, URI> uriMap = uriConverter.getURIMap();
+		registerPlatformToFileURIMapping(MdlImportURIGlobalScopeProvider.HEADER_URI, uriMap);
+	}
+ 
+	private static void registerPlatformToFileURIMapping(URI uri, Map<URI, URI> uriMap) {
+		final URI newURI = createClasspathURIForHeaderFile(uri);
+		uriMap.put(uri, newURI);
+	}
+	
+	private static URI createClasspathURIForHeaderFile(URI uri) {
+		String path = uri.path().replace("/plugin/", ""); // Eclipse RCP platform URL to a plugin resource starts with "/plugin/" so strip this off 
+		path = path.substring(path.indexOf("/")); // This skips past the plugin name, i.e. eu.ddmore.mdl.definitions/
+		// Now we're just left with the path to the resource within the plugin; the built plugin JAR is available on the classpath, so create a classpath URI pointing at this resource
+		return URI.createURI("classpath:" + path);
+	}
     
 }
