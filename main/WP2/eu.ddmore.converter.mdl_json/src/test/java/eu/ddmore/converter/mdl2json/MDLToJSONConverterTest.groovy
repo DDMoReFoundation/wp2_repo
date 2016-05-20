@@ -13,6 +13,7 @@ import java.io.IOException
 import org.apache.commons.io.FileUtils
 import org.junit.Before
 import org.junit.Rule;
+import org.junit.Ignore;
 import org.junit.Test
 import org.junit.rules.TemporaryFolder;
 
@@ -20,6 +21,7 @@ import eu.ddmore.convertertoolbox.api.response.ConversionReport
 import eu.ddmore.convertertoolbox.api.response.ConversionReport.ConversionCode
 
 
+@Ignore("MDL to JSON conversion is currently not supported")
 public class MDLToJSONConverterTest {
     
     @Rule
