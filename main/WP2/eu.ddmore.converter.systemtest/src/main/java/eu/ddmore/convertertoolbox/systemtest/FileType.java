@@ -9,7 +9,7 @@ public enum FileType {
     PharmML("xml","0.8.1"),
     PharmML_060("xml","0.6.0"),
     NMTRAN("ctl","7.3.0"),
-    JSON("json","7.0.0");
+    JSON("json","8.0.0");
     
     private String version;
     private String extension;
