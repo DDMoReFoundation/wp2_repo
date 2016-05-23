@@ -16,7 +16,7 @@ import eu.ddmore.mdl.utils.MdlExpressionConverter
 public class BlockStatementFactory {
 
     public static BlockStatement fromMDL(final eu.ddmore.mdl.mdl.BlockStatement blkStatement) {
-        final String blockName = blkStatement.getIdentifier()
+        final String blockName = blkStatement.getBlkId().getName()
         final eu.ddmore.mdl.mdl.BlockBody blkBody = blkStatement.getBody()
         final Map<String, String> blkAttrsMap = getBlockArgumentsAsMap(blkStatement)
         
@@ -35,12 +35,8 @@ public class BlockStatementFactory {
     private static Map<String, String> getBlockArgumentsAsMap(final eu.ddmore.mdl.mdl.BlockStatement blkStatement) {
         if (blkStatement.getBlkArgs().getArgs()) {
             final Map<String, String> blkArgsMap = [:]
-            blkStatement.getBlkArgs().getArgs().collect { blkArg -> // TODO: Did have BlockArgument type before - Rework this
-                if (blkArg instanceof ValuePair) {
-                    blkArgsMap.put(((ValuePair) blkArg).getArgumentName(), MdlExpressionConverter.convertToString(((ValuePair) blkArg).getExpression()))
-                } else {
-                    throw new UnsupportedOperationException("Subclass " + blkArg.getClass() + " of BlockArgument not currently supported")
-                }
+            blkStatement.getBlkArgs().getArgs().collect { ValuePair blkArg ->
+                blkArgsMap.put(((ValuePair) blkArg).getArgumentName(), MdlExpressionConverter.convertToString(((ValuePair) blkArg).getExpression()))
             }
             return blkArgsMap
         }

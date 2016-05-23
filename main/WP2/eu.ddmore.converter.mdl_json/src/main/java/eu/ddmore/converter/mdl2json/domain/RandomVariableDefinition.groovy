@@ -6,6 +6,7 @@ package eu.ddmore.converter.mdl2json.domain
 import eu.ddmore.converter.mdl2json.utils.KeyValuePairConverter
 import eu.ddmore.mdl.mdl.NamedFuncArguments
 import eu.ddmore.mdl.mdl.ValuePair
+import eu.ddmore.mdl.utils.MdlExpressionConverter;
 
 /**
  * Represents {@link eu.ddmore.mdl.mdl.RandomVariableDefinition}, a subclass of {@link eu.ddmore.mdl.mdl.Statement},
@@ -30,6 +31,8 @@ public class RandomVariableDefinition extends AbstractStatement {
     public final static String PROPERTY_NAME = "name"
     public final static String PROPERTY_DIST_TYPE = "distType"
     public final static String PROPERTY_ARGS = "args"
+	// Initially for Product 5, store as string (e.g. "Normal(mean=0, sd=PPV_V)") with this key; TODO: split into DIST_TYPE and DISTN components 
+	public final static String PROPERTY_DISTN = "distn"
 
     /**
      * Constructor creating from MDL grammar objects.
@@ -39,6 +42,8 @@ public class RandomVariableDefinition extends AbstractStatement {
     public RandomVariableDefinition(final eu.ddmore.mdl.mdl.RandomVariableDefinition randomVarDefn) {
         setProperty(PROPERTY_SUBTYPE, EStatementSubtype.RandomVarDefinition.getIdentifierString())
         setProperty(PROPERTY_NAME, randomVarDefn.getName())
+		// TODO: Try and split this into 'distType' and 'args' components 
+		setProperty(PROPERTY_DISTN, MdlExpressionConverter.convertToString(randomVarDefn.getDistn()))
 // TODO: Commented out as BuiltinFunctionCall no longer exists - rework this
 //        final eu.ddmore.mdl.mdl.BuiltinFunctionCall distn = randomVarDefn.getDistn();
 //        setProperty(PROPERTY_DIST_TYPE, distn.getFunc())
@@ -61,10 +66,13 @@ public class RandomVariableDefinition extends AbstractStatement {
         sb.append(IDT)
         sb.append(getProperty(PROPERTY_NAME))
         sb.append(" ~ ")
-        sb.append(getProperty(PROPERTY_DIST_TYPE))
-        sb.append("(")
-        sb.append(KeyValuePairConverter.toMDL(getProperty(PROPERTY_ARGS)))
-        sb.append(")")
+		sb.append(getProperty(PROPERTY_DISTN))
+		// TODO: Reinstate this once split into 'distType' and 'args' components
+//        sb.append(getProperty(PROPERTY_DIST_TYPE))
+//        sb.append("(")
+//        sb.append(KeyValuePairConverter.toMDL(getProperty(PROPERTY_ARGS)))
+//        sb.append(")")
+		
 //        if (getProperty(PROPERTY_LIST)) {
 //            sb.append(" : {")
 //            sb.append(getProperty(PROPERTY_LIST).collect { // List of Maps, each Map containing one Entry

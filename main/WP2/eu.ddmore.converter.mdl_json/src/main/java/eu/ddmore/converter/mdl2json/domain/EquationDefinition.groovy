@@ -29,6 +29,7 @@ public class EquationDefinition extends AbstractStatement {
     public final static String PROPERTY_EXPRESSION = "expr"
     public final static String PROPERTY_FUNCNAME = "funcName"
     public final static String PROPERTY_FUNCARGS = "funcArgs"
+	public final static String PROPERTY_TYPESPEC = "typeSpec"
     
     /**
      * Constructor creating from MDL grammar objects.
@@ -49,6 +50,9 @@ public class EquationDefinition extends AbstractStatement {
                 setProperty(PROPERTY_EXPRESSION, MdlExpressionConverter.convertToString(eqnDefn.getExpression()))
 //            }
         }
+		if (eqnDefn.getTypeSpec()) { // This is for DECLARED_VARIABLES block where as of Product 5, variables now have type e.g. GUT::dosingTarget
+			setProperty(PROPERTY_TYPESPEC, eqnDefn.getTypeSpec().getTypeName().getName())
+		}
     }
     
     /**
@@ -86,6 +90,10 @@ public class EquationDefinition extends AbstractStatement {
             sb.append(KeyValuePairConverter.toMDL(getProperty(PROPERTY_FUNCARGS)))
             sb.append(")")
         }
+		if (getProperty(PROPERTY_TYPESPEC)) {
+			sb.append(" :: ")
+			sb.append(getProperty(PROPERTY_TYPESPEC))
+		}
         sb.toString()
     }
         

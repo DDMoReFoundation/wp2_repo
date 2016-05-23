@@ -38,7 +38,16 @@ public class ListDefinition extends AbstractStatement {
      * @param listDefn - {@link eu.ddmore.mdl.mdl.ListDefinition} object from the MDL grammar
      */
     public ListDefinition(final eu.ddmore.mdl.mdl.ListDefinition listDefn) {
-        setProperty(listDefn.getName(), KeyValuePairConverter.toMap(listDefn.getList().getAttributes()))
+		final eu.ddmore.mdl.mdl.AbstractAttributeList attrList = listDefn.getList()
+		if (attrList instanceof eu.ddmore.mdl.mdl.AttributeList) {
+			setProperty(listDefn.getName(), KeyValuePairConverter.toMap(((eu.ddmore.mdl.mdl.AttributeList) attrList).getAttributes()))
+		} else if (attrList instanceof eu.ddmore.mdl.mdl.ListIfExpression) {
+			throw new UnsupportedOperationException("ListIfExpression not currently implemented")
+		} else if (attrList instanceof eu.ddmore.mdl.mdl.ListPiecewiseExpression) {
+			throw new UnsupportedOperationException("ListPiecewiseExpression not currently implemented")
+		} else {
+			throw new UnsupportedOperationException("Unknown subclass of eu.ddmore.mdl.mdl.AbstractAttributeList encountered: " + attrList.getClass().getName())
+		}
     }
     
     /**

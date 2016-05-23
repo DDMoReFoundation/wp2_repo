@@ -14,7 +14,6 @@ import org.apache.log4j.Logger
 import org.junit.Ignore;
 import org.junit.Test
 
-@Ignore("MDL to JSON conversion is currently not supported")
 class EndToEndIntegrationTest {
     private static final Logger LOGGER = Logger.getLogger(EndToEndIntegrationTest.class)
     
@@ -58,8 +57,9 @@ class EndToEndIntegrationTest {
      */
     @Test
     public void mdlFileConvertedToJsonAndBackAgainShouldBeEquivalentToOriginalMdlFile() {
-        def origMdlFile = getFile("FullyPopulated.mdl")        
-        // final File origMdlFile = getFileFromModelsProject("Product4.1_newgrammar/UseCase1.mdl")
+		// def origMdlFile = getFile("FullyPopulated.mdl")
+		def origMdlFile = getFile("UseCase1_Product5.mdl")
+        // def origMdlFile = getFileFromModelsProject("Product4.1_newgrammar/UseCase1.mdl")
         
         def json = getJsonFromMDLFile(origMdlFile)
         
@@ -81,6 +81,7 @@ class EndToEndIntegrationTest {
      * full MDL->JSON->R->JSON->MDL pipeline.
      */
     @Test
+	@Ignore("Need to re-generate from R")
     public void readMdlFileFromJSON() {
         
         final File origMdlFile = getFile("FullyPopulated.mdl")
