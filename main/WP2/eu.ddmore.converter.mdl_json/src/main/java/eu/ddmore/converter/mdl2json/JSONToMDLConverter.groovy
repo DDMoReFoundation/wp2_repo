@@ -27,8 +27,8 @@ public class JSONToMDLConverter implements ConverterProvider {
     private static final String MDL_FILE_EXTENSION = ".mdl"
     private static final String JSON_FILE_EXTENSION = ".json"
 
-    private final LanguageVersion source = new LanguageVersionImpl("JSON", new VersionImpl(7, 0, 0))
-    private final LanguageVersion target = new LanguageVersionImpl("MDL", new VersionImpl(7, 0, 0))
+    private final LanguageVersion source = new LanguageVersionImpl("JSON", new VersionImpl(8, 0, 0))
+    private final LanguageVersion target = new LanguageVersionImpl("MDL", new VersionImpl(8, 0, 0))
     // this should be the same as the development stream version as of this Maven module
     private final Version converterVersion = new VersionImpl(0, 3, 0);
 
