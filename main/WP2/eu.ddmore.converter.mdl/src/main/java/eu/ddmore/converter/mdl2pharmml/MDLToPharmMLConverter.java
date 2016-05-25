@@ -5,7 +5,6 @@ package eu.ddmore.converter.mdl2pharmml;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Iterator;
 import java.util.Map;
 
 import org.apache.commons.io.FileUtils;
@@ -30,8 +29,8 @@ import eu.ddmore.convertertoolbox.domain.VersionImpl;
 import eu.ddmore.mdl.MdlStandaloneSetup;
 import eu.ddmore.mdl.mdl.Mcl;
 import eu.ddmore.mdl.mdl.MclObject;
+import eu.ddmore.mdl.provider.MogDefinitionProvider;
 import eu.ddmore.mdl.scoping.MdlImportURIGlobalScopeProvider;
-import eu.ddmore.mdl.utils.MdlUtils;
 
 public class MDLToPharmMLConverter implements ConverterProvider {
 
@@ -67,18 +66,16 @@ public class MDLToPharmMLConverter implements ConverterProvider {
         
         if (validator.validate(resource, report)) {
         
-            MdlUtils mclUtils = new MdlUtils();
+            MogDefinitionProvider utils = new MogDefinitionProvider();
             Mcl mcl = (Mcl) resource.getContents().get(0);
-            Iterable<MclObject> mogs = mclUtils.getMogObjects(mcl);
+            MclObject mog = utils.getFirstMogObj(mcl);
     
             // TODO: We're currently making an assumption that there will be a single MOG
             // in the provided file.  This should be fine for Product 4.
             // This will be addressed under DDMORE-1221
-            Iterator<MclObject> mogsIt = mogs.iterator();
-            if (!mogsIt.hasNext()) {
+            if (mog==null) {
             	throw new IllegalStateException("Must be (at least) one MOG defined in the provided MCL file: " + src); 
             }
-            final MclObject mog = mogsIt.next();
     
             final CharSequence converted = new Mdl2Pharmml().convertToPharmML(mog);
             
