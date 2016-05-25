@@ -110,7 +110,7 @@ public class MDLToPharmMLConverterIntegrationTest {
         final ConversionReport report = converter.performConvert(semanticErrorsMdlFile, workingFolder.getRoot());
         assertEquals("Checking for failure return code", ConversionCode.FAILURE, report.getReturnCode());
         assertFalse("No converted PharmML file should have been created", semanticErrorsPharmmlFile.exists());
-        assertEquals("Checking the number of errors that were returned", 3, report.getDetails(Severity.ERROR).size());
+        assertEquals("Checking the number of errors that were returned", 2, report.getDetails(Severity.ERROR).size());
     }
     
     /**
