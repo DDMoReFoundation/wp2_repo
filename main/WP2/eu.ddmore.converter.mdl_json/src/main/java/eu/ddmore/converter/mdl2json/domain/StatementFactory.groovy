@@ -58,5 +58,29 @@ public class StatementFactory {
             }
         }
     }
-    
+    public static Map unmarshallDomainObjects(Map json) {
+        if (json) {
+            json.collectEntries { k, v -> 
+                     if(v instanceof Map) {
+                        final String subtype = v.get(AbstractStatement.PROPERTY_SUBTYPE)
+                        if(subtype) {
+                            for (final EStatementSubtype e : EStatementSubtype.values()) {
+                                if (EStatementSubtype.BlockStmt.getIdentifierString().equals(subtype)) {
+                                    // Special case, have to create via BlockStatementFactory
+                                    return [k, BlockStatementFactory.fromJSON(v)]
+                                }
+                                else if (e.getIdentifierString().equals(subtype)) {
+                                    final Class clazz = Class.forName(StatementFactory.class.getPackage().getName()+"."+e.getClassName())
+                                    return [k, clazz.newInstance(v)]
+                                }
+                            }
+                        } else {
+                            return [k, unmarshallDomainObjects(v)]
+                        }
+                    } else {
+                     return [k, v]
+                    }
+                 }
+        }
+    }
 }

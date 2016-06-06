@@ -56,7 +56,7 @@ public class ListDefinition extends AbstractStatement {
      * @param json - {@link Map} of content
      */
     public ListDefinition(final Map json) {
-        super(json)
+        super(StatementFactory.unmarshallDomainObjects(json))
     }
     
     @Override

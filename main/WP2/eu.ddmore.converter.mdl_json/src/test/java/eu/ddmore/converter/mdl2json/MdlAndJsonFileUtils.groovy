@@ -17,6 +17,7 @@ import eu.ddmore.convertertoolbox.domain.ConversionReportImpl
 import eu.ddmore.mdlparse.MdlParser
 import groovy.json.JsonBuilder
 import groovy.json.JsonSlurper
+import groovy.json.JsonOutput
 
 
 class MdlAndJsonFileUtils {
@@ -111,7 +112,7 @@ class MdlAndJsonFileUtils {
         jb wrappedMcl
         ret = jb.toString()
 
-        return ret
+        return JsonOutput.prettyPrint(ret)
     }
 
 }
