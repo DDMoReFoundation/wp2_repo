@@ -78,6 +78,7 @@ public class BlockStatementFactory {
                 return EBlockStatementType.SYMBOL_NAMES
             case "ESTIMATE":
             case "SIMULATE":
+            case "EVALUATE":
                 return EBlockStatementType.TASKOBJ_BLOCK
             default:
                 return EBlockStatementType.STATEMENTS
