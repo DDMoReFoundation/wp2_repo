@@ -60,7 +60,7 @@ public class BlockStatementFactory {
             case EBlockStatementType.STATEMENTS:
                 return new StatementListBlockStatement(blockName, ((List<Map>) json[blockName]))
             case EBlockStatementType.TASKOBJ_BLOCK:
-                return new TaskObjectBlockStatement(blockName, (Map<String, String>)json[blockName])
+                return new TaskObjectBlockStatement(blockName, (json[blockName].size()>0)?(Map<String, String>)json[blockName]: [:])
             case EBlockStatementType.CONTENT:
                 return new TextualContentBlockStatement(blockName, (String) json[blockName])
         }
