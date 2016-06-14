@@ -11,11 +11,11 @@
 	<modelVersion>4.0.0</modelVersion>
 	<artifactId>converter-mdl</artifactId>
 	<version>0.4.0-SNAPSHOT</version>
-	<name>Converter Providers: MDL to PharmML and NM-TRAN</name>
+	<name>Converter Provider: MDL to PharmML</name>
 
 	<properties>
 		<xtend.repo.url>http://build.eclipse.org/common/xtend/maven/</xtend.repo.url>
-		<xtend.version>2.7.3</xtend.version>
+		<xtend.version>2.9.1</xtend.version>
 		<antlr.version>3.2</antlr.version>
 	</properties>
 
@@ -28,11 +28,21 @@
 
 	<dependencies>
 	
+        <dependency>
+            <groupId>eu.ddmore</groupId>
+            <artifactId>eu.ddmore.mdl</artifactId>
+            <version>1.5.0-SNAPSHOT</version>
+        </dependency>
+        <dependency>
+        	<groupId>eu.ddmore.mdllib</groupId>
+        	<artifactId>eu.ddmore.mdllib</artifactId>
+        	<version>1.2.2-SNAPSHOT</version>
+        </dependency>
 		<dependency>
-			<groupId>eu.ddmore</groupId>
-			<artifactId>eu.ddmore.mdl</artifactId>
-			<version>1.4.0-SNAPSHOT</version>
-		</dependency>
+        	<groupId>eu.ddmore</groupId>
+        	<artifactId>eu.ddmore.mdl.definitions</artifactId>
+        	<version>1.5.0-SNAPSHOT</version>
+        </dependency>
 
         <dependency>
             <groupId>org.eclipse.xtend</groupId>

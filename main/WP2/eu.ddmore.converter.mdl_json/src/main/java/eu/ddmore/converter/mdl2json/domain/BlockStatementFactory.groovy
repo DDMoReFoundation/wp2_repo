@@ -6,7 +6,6 @@ package eu.ddmore.converter.mdl2json.domain
 import com.google.common.base.Preconditions
 
 import eu.ddmore.converter.mdl2json.domain.BlockStatement.EBlockStatementType
-import eu.ddmore.mdl.mdl.BlockArgument
 import eu.ddmore.mdl.mdl.ValuePair
 import eu.ddmore.mdl.utils.MdlExpressionConverter
 
@@ -17,7 +16,7 @@ import eu.ddmore.mdl.utils.MdlExpressionConverter
 public class BlockStatementFactory {
 
     public static BlockStatement fromMDL(final eu.ddmore.mdl.mdl.BlockStatement blkStatement) {
-        final String blockName = blkStatement.getIdentifier()
+        final String blockName = blkStatement.getBlkId().getName()
         final eu.ddmore.mdl.mdl.BlockBody blkBody = blkStatement.getBody()
         final Map<String, String> blkAttrsMap = getBlockArgumentsAsMap(blkStatement)
         
@@ -36,12 +35,8 @@ public class BlockStatementFactory {
     private static Map<String, String> getBlockArgumentsAsMap(final eu.ddmore.mdl.mdl.BlockStatement blkStatement) {
         if (blkStatement.getBlkArgs().getArgs()) {
             final Map<String, String> blkArgsMap = [:]
-            blkStatement.getBlkArgs().getArgs().collect { BlockArgument blkArg ->
-                if (blkArg instanceof ValuePair) {
-                    blkArgsMap.put(((ValuePair) blkArg).getArgumentName(), MdlExpressionConverter.convertToString(((ValuePair) blkArg).getExpression()))
-                } else {
-                    throw new UnsupportedOperationException("Subclass " + blkArg.getClass() + " of BlockArgument not currently supported")
-                }
+            blkStatement.getBlkArgs().getArgs().collect { ValuePair blkArg ->
+                blkArgsMap.put(((ValuePair) blkArg).getArgumentName(), MdlExpressionConverter.convertToString(((ValuePair) blkArg).getExpression()))
             }
             return blkArgsMap
         }
@@ -65,7 +60,7 @@ public class BlockStatementFactory {
             case EBlockStatementType.STATEMENTS:
                 return new StatementListBlockStatement(blockName, ((List<Map>) json[blockName]))
             case EBlockStatementType.TASKOBJ_BLOCK:
-                return new TaskObjectBlockStatement(blockName, (Map<String, String>)json[blockName])
+                return new TaskObjectBlockStatement(blockName, (json[blockName].size()>0)?(Map<String, String>)json[blockName]: [:])
             case EBlockStatementType.CONTENT:
                 return new TextualContentBlockStatement(blockName, (String) json[blockName])
         }
@@ -83,6 +78,7 @@ public class BlockStatementFactory {
                 return EBlockStatementType.SYMBOL_NAMES
             case "ESTIMATE":
             case "SIMULATE":
+            case "EVALUATE":
                 return EBlockStatementType.TASKOBJ_BLOCK
             default:
                 return EBlockStatementType.STATEMENTS

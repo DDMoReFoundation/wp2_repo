@@ -4,7 +4,6 @@
 package eu.ddmore.converter.mdl2json.domain
 
 import eu.ddmore.converter.mdl2json.utils.KeyValuePairConverter
-import eu.ddmore.mdl.mdl.BuiltinFunctionCall
 import eu.ddmore.mdl.mdl.NamedFuncArguments
 import eu.ddmore.mdl.mdl.ValuePair
 
@@ -39,10 +38,11 @@ public class TransformedDefinition extends AbstractStatement {
         setProperty(PROPERTY_SUBTYPE, EStatementSubtype.TransDefinition.getIdentifierString())
         setProperty(PROPERTY_NAME, transDefn.getName())
         setProperty(PROPERTY_TRANSFORM, transDefn.getTransform())
-        BuiltinFunctionCall funcCall = transDefn.getExpression()
-        if (funcCall.getFunc()) {
-            setProperty(PROPERTY_FUNCTION, funcCall.getFunc())
-        }
+// TODO: Commented out as BuiltinFunctionCall no longer exists - rework this
+//        BuiltinFunctionCall funcCall = transDefn.getExpression()
+//        if (funcCall.getFunc()) {
+//            setProperty(PROPERTY_FUNCTION, funcCall.getFunc())
+//        }
         setProperty(PROPERTY_ARGS, KeyValuePairConverter.toMap(funcCall.getArgList()))
     }
     

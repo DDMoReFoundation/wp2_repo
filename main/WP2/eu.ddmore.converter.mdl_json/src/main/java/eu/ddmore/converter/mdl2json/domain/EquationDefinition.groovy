@@ -4,7 +4,6 @@
 package eu.ddmore.converter.mdl2json.domain
 
 import eu.ddmore.converter.mdl2json.utils.KeyValuePairConverter;
-import eu.ddmore.mdl.mdl.BuiltinFunctionCall;
 import eu.ddmore.mdl.mdl.FuncArguments
 import eu.ddmore.mdl.mdl.NamedFuncArguments;
 import eu.ddmore.mdl.utils.MdlExpressionConverter
@@ -30,6 +29,7 @@ public class EquationDefinition extends AbstractStatement {
     public final static String PROPERTY_EXPRESSION = "expr"
     public final static String PROPERTY_FUNCNAME = "funcName"
     public final static String PROPERTY_FUNCARGS = "funcArgs"
+	public final static String PROPERTY_TYPESPEC = "typeSpec"
     
     /**
      * Constructor creating from MDL grammar objects.
@@ -40,14 +40,19 @@ public class EquationDefinition extends AbstractStatement {
         setProperty(PROPERTY_SUBTYPE, EStatementSubtype.EquationDefinition.getIdentifierString())
         setProperty(PROPERTY_NAME, eqnDefn.getName())
         if (eqnDefn.getExpression()) {
-            if (eqnDefn.getExpression() instanceof BuiltinFunctionCall && ((BuiltinFunctionCall) eqnDefn.getExpression()).getArgList() instanceof NamedFuncArguments) {
-                // This is really only for OBSERVATION block items, where it is nice to parse the combinedError function call and its arguments rather than these being a single string
-                setProperty(PROPERTY_FUNCNAME, ((BuiltinFunctionCall) eqnDefn.getExpression()).getFunc())
-                setProperty(PROPERTY_FUNCARGS, KeyValuePairConverter.toMap(((BuiltinFunctionCall) eqnDefn.getExpression()).getArgList()))
-            } else {
+
+// TODO: Commented out since BuiltinFunctionCall no longer exists - rework this
+//            if (eqnDefn.getExpression() instanceof BuiltinFunctionCall && ((BuiltinFunctionCall) eqnDefn.getExpression()).getArgList() instanceof NamedFuncArguments) {
+//                // This is really only for OBSERVATION block items, where it is nice to parse the combinedError function call and its arguments rather than these being a single string
+//                setProperty(PROPERTY_FUNCNAME, ((BuiltinFunctionCall) eqnDefn.getExpression()).getFunc())
+//                setProperty(PROPERTY_FUNCARGS, KeyValuePairConverter.toMap(((BuiltinFunctionCall) eqnDefn.getExpression()).getArgList()))
+//            } else {
                 setProperty(PROPERTY_EXPRESSION, MdlExpressionConverter.convertToString(eqnDefn.getExpression()))
-            }
+//            }
         }
+		if (eqnDefn.getTypeSpec()) { // This is for DECLARED_VARIABLES block where as of Product 5, variables now have type e.g. GUT::dosingTarget
+			setProperty(PROPERTY_TYPESPEC, eqnDefn.getTypeSpec().getTypeName().getName())
+		}
     }
     
     /**
@@ -85,6 +90,10 @@ public class EquationDefinition extends AbstractStatement {
             sb.append(KeyValuePairConverter.toMDL(getProperty(PROPERTY_FUNCARGS)))
             sb.append(")")
         }
+		if (getProperty(PROPERTY_TYPESPEC)) {
+			sb.append(" :: ")
+			sb.append(getProperty(PROPERTY_TYPESPEC))
+		}
         sb.toString()
     }
         

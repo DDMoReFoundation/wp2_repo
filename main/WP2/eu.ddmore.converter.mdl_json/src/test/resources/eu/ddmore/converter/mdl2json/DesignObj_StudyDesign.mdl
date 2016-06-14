@@ -1,0 +1,136 @@
+# SIMEONI 2004
+# TGI model in vivo
+# 3 doses administered every 4 days
+# Time=0 is in fact time=8 days (we dose and sample relative to time=8 days, after the initial tumour growth)
+# This model is used for optimal design, assuming PK parameters are fixed (not estimated)
+#
+# By Elisa Borella, Letizia Carrara, Silvia Lavezzi, Paolo Magni, Lorenzo Pasotti, Elena Tosca
+# BMS lab - Univ Pavia
+# Copyright 2016
+#
+
+simeoni2004_design = designObj{
+	DECLARED_VARIABLES{ 
+		Q1::dosingTarget
+		Y::continuousObs
+	}
+	
+	INTERVENTION{
+		treated : {type is bolus, input=Q1, amount=30*10^6, doseTime=0} # Relative to time=8 days
+		control : {type is bolus, input=Q1, amount=0, doseTime=0}
+	}
+	
+	STUDY_DESIGN{
+		treatedArm : {armSize = 1, interventionSequence = {admin=treated, start=0},
+							 samplingSequence = {sample=sampleTreated,start=0}}
+							 	
+		controlArm : {armSize = 1, interventionSequence = {admin=control, start=0}, 
+							 samplingSequence={sample=sampleControl,start=0}}
+	}
+	SAMPLING{ # Relative to time=8 days
+		sampleControl : {type is simple, sampleTime=[0,4,36,40], outcome = Y}
+		sampleTreated : {type is simple, sampleTime=[0,20,55,60], outcome = Y}
+	}
+}
+
+simeoni2004_par = parObj{
+
+   STRUCTURAL{
+      LAMBDA0_POP : {value=0.238, lo=0} # units="1/day"
+      LAMBDA1_POP : {value=0.14, lo=0} #  units="g/day"
+      K1_POP : {value=0.117, lo=0} # units="1/day"
+      K2_POP : {value=6.39E-4, lo=0} # units="L/???/day"
+      W0_POP : {value=1, lo=0} # units="g"	# TODO: change to simulated value at time=8 days
+      K10_POP : {value=28.32, fix=true} #1.18*24 #1/day
+      K12_POP : {value=2.376, fix=true} #0.099*24 #1/day
+      K21_POP : {value=5.472, fix=true} #0.228*24 #1/day
+      V1_POP : {value=501, fix=true} #L/kg
+      PSI_POP : {value=20, fix=true}
+      CV : {value=0.1, lo=0}
+   	}
+   
+   VARIABILITY{
+	SIGMA_RES_W : {value=1 ,type is var, fix=true}
+	}
+}
+
+simeoni2004_mdl = mdlObj{
+
+ 	IDV { T }
+ 	
+ 	VARIABILITY_LEVELS{
+   	DV : { level=1, type is observation }
+   }
+
+	
+	STRUCTURAL_PARAMETERS{
+      LAMBDA0_POP
+      LAMBDA1_POP
+      K1_POP
+      K2_POP
+      W0_POP
+      K10_POP
+      K12_POP
+      K21_POP
+      V1_POP
+      PSI_POP
+	}
+	
+	VARIABILITY_PARAMETERS{
+	  CV
+     }
+		
+	INDIVIDUAL_VARIABLES{
+      	LAMBDA0 = LAMBDA0_POP
+      	LAMBDA1 = LAMBDA1_POP
+      	K1 = K1_POP
+      	K2 = K2_POP
+      	W0 = W0_POP
+		K10 = K10_POP
+		K12 = K12_POP
+		K21 = K21_POP
+		V1 = V1_POP
+		PSI = PSI_POP
+   	}
+   
+	
+	MODEL_PREDICTION{  	
+		DEQ{     	
+		    C=Q1/V1
+			WTOT=X1+X2+X3+X4
+			Q1:{deriv=K21*Q2-(K10+K12)*Q1, init=0}
+			Q2:{deriv=K12*Q1-K21*Q2, init=0}
+			X1:{deriv=(LAMBDA0*X1/((1+(WTOT*LAMBDA0/LAMBDA1)^PSI)^(1/PSI)))-K2*C*X1, init=W0}
+			X2:{deriv=K2*C*X1-K1*X2, init=0}
+			X3:{deriv=K1*X2-K1*X3, init=0}
+			X4:{deriv=K1*X3-K1*X4, init=0}	
+    	}	
+	}	
+   
+   
+   	RANDOM_VARIABLE_DEFINITION (level=DV) {
+	    eps_RES_W ~ Normal(mean=0, var=1)
+	}
+	
+	
+   OBSERVATION {		 
+ 	 Y : {type is proportionalError, proportional=CV,  eps=eps_RES_W, prediction= WTOT}
+  	}
+ 
+}
+
+   
+simeoni2004_Evaltask = taskObj{ 
+  EVALUATE { 
+	}
+}
+
+simeoni2004_OptDes =mogObj{
+	OBJECTS{
+	simeoni2004_design : {type is designObj}
+	simeoni2004_par : {type is parObj}
+	simeoni2004_mdl : {type is mdlObj}
+	simeoni2004_Evaltask : {type is taskObj}
+	}
+}
+

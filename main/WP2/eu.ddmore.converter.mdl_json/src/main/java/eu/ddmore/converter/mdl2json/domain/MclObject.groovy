@@ -12,7 +12,7 @@ public class MclObject extends Expando implements MDLPrintable {
     public MclObject(final eu.ddmore.mdl.mdl.MclObject mclObj) {
         
         setProperty(PROPERTY_NAME, mclObj.getName())
-        setProperty(PROPERTY_TYPE, mclObj.getMdlObjType())
+        setProperty(PROPERTY_TYPE, mclObj.getObjId().getName())
         setProperty(PROPERTY_BLOCKS, TopLevelBlockStatements.fromMDL(mclObj.getBlocks()))
         
     }

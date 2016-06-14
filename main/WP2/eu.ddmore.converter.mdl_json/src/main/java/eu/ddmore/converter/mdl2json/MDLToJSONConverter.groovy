@@ -29,14 +29,15 @@ public class MDLToJSONConverter implements ConverterProvider {
     private static final String MDL_FILE_EXTENSION = ".mdl"
     private static final String JSON_FILE_EXTENSION = ".json"
 
-    private final LanguageVersion source = new LanguageVersionImpl("MDL", new VersionImpl(7, 0, 0))
-    private final LanguageVersion target = new LanguageVersionImpl("JSON", new VersionImpl(7, 0, 0))
+    private final LanguageVersion source = new LanguageVersionImpl("MDL", new VersionImpl(8, 0, 0))
+    private final LanguageVersion target = new LanguageVersionImpl("JSON", new VersionImpl(8, 0, 0))
     // this should be the same as the development stream version as of this Maven module
     private final Version converterVersion = new VersionImpl(0, 3, 0);
 
     /**
      * Converter Toolbox required entry point.
      */
+	@Override
     public ConversionReport performConvert(File src, File outputDirectory) throws IOException {
         // We know we're going to return a conversion report so create it up front; it is added to at various places in this method
         final ConversionReport report = new ConversionReportImpl()
@@ -87,7 +88,6 @@ public class MDLToJSONConverter implements ConverterProvider {
         }
     }
 
-    @Override
     public ConversionReport[] performConvert(File[] src, File outputDirectory) throws IOException {
         ConversionReport[] reports = new ConversionReport[src.length];
         int i = 0;

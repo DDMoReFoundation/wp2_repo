@@ -3,12 +3,13 @@
  ******************************************************************************/
 package eu.ddmore.mdlparse
 
+import java.util.Map;
+
 import org.apache.log4j.Logger
-import eu.ddmore.mdl.MdlStandaloneSetup
-import eu.ddmore.mdl.mdl.Mcl
 import org.eclipse.emf.common.util.EList
 import org.eclipse.emf.common.util.URI
 import org.eclipse.emf.ecore.resource.Resource
+import org.eclipse.emf.ecore.resource.URIConverter
 import org.eclipse.emf.ecore.resource.Resource.Diagnostic
 import org.eclipse.xtext.resource.XtextResource
 import org.eclipse.xtext.resource.XtextResourceSet
@@ -16,11 +17,16 @@ import org.eclipse.xtext.resource.XtextResourceSet
 import com.google.common.base.Preconditions
 import com.google.inject.Injector
 
+import eu.ddmore.mdl.MdlStandaloneSetup
+import eu.ddmore.mdl.mdl.Mcl
+import eu.ddmore.mdl.scoping.MdlImportURIGlobalScopeProvider;
+
 import eu.ddmore.convertertoolbox.api.response.ConversionDetail
 import eu.ddmore.convertertoolbox.api.response.ConversionReport
 import eu.ddmore.convertertoolbox.api.response.ConversionDetail.Severity
 import eu.ddmore.convertertoolbox.api.response.ConversionReport.ConversionCode
 import eu.ddmore.convertertoolbox.domain.ConversionDetailImpl
+
 
 class MdlParser {
     private static final Logger LOG = Logger.getLogger(MdlParser.class)
@@ -29,11 +35,32 @@ class MdlParser {
     static XtextResourceSet resourceSet;
 
     static {
+		new eu.ddmore.mdllib.MdlLibStandaloneSetup().createInjectorAndDoEMFRegistration();
         injector = new MdlStandaloneSetup().createInjectorAndDoEMFRegistration();
         resourceSet = injector.getInstance(XtextResourceSet.class);
         resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+		
+		registerURIMappingsForImplicitImports(resourceSet);
     }
 
+	private static void registerURIMappingsForImplicitImports(XtextResourceSet resourceSet) {
+		URIConverter uriConverter = resourceSet.getURIConverter();
+		Map<URI, URI> uriMap = uriConverter.getURIMap();
+		registerPlatformToFileURIMapping(MdlImportURIGlobalScopeProvider.HEADER_URI, uriMap);
+	}
+ 
+	private static void registerPlatformToFileURIMapping(URI uri, Map<URI, URI> uriMap) {
+		final URI newURI = createClasspathURIForHeaderFile(uri);
+		uriMap.put(uri, newURI);
+	}
+	
+	private static URI createClasspathURIForHeaderFile(URI uri) {
+		String path = uri.path().replace("/plugin/", ""); // Eclipse RCP platform URL to a plugin resource starts with "/plugin/" so strip this off 
+		path = path.substring(path.indexOf("/")); // This skips past the plugin name, i.e. eu.ddmore.mdl.definitions/
+		// Now we're just left with the path to the resource within the plugin; the built plugin JAR is available on the classpath, so create a classpath URI pointing at this resource
+		return URI.createURI("classpath:" + path);
+	}
+	
     /**
      * Parse the MDL file into an object graph of Xtext domain objects rooted at an {@link Mcl} object.
      * Any errors encountered in parsing the MDL will be populated in the provided {@link ConversionReport}
@@ -46,7 +73,7 @@ class MdlParser {
     public Mcl parse(final File mdlFile, final ConversionReport report) {
         Preconditions.checkNotNull(mdlFile, "No MDL File provided to MdlParser.parse()")
         Preconditions.checkNotNull(report, "A ConversionReport must be provided to MdlParser.parse()")
-        
+		
         final Resource resource = resourceSet.getResource(URI.createURI("file:///" + mdlFile.getAbsolutePath()), true)
 
         EList<Diagnostic> errors = resource.getErrors()
