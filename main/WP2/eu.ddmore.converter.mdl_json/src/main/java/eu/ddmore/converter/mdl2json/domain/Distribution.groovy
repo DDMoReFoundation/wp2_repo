@@ -3,8 +3,7 @@
  ******************************************************************************/
 package eu.ddmore.converter.mdl2json.domain
 
-import eu.ddmore.converter.mdl2json.interfaces.MDLPrintable;
-import groovy.util.Expando;
+import eu.ddmore.converter.mdl2json.interfaces.MDLPrintable
 
 /**
  * Represents distribution reference
@@ -14,7 +13,7 @@ class Distribution extends Expando implements MDLPrintable {
     
     public Distribution(String distribution) {
         setProperty(PROPERTY_DISTN, distribution)
-        setProperty(AbstractStatement.PROPERTY_SUBTYPE, EStatementSubtype.DistributionDefinition.getIdentifierString())
+        setProperty(AbstractStatement.PROPERTY_SUBTYPE, ExtendedDomainSubtype.DistributionDefinition.getIdentifierString())
     }
     
     public Distribution(Map json) {

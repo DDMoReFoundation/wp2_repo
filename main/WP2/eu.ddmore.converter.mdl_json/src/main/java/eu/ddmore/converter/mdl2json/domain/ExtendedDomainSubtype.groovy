@@ -5,20 +5,13 @@ package eu.ddmore.converter.mdl2json.domain
 
 
 /**
- * Enumerates the different subclasses of {@link eu.ddmore.mdl.mdl.Statement}.
+ * Enumerates the different classes extending MDL domain.
  */
-public enum EStatementSubtype {
+public enum ExtendedDomainSubtype {
 
-    EquationDefinition("EquationDef", "EquationDefinition"),
-    ListDefinition("ListDef", "ListDefinition"),
-    RandomVarDefinition("RandVarDefn", "RandomVariableDefinition"),
-    TransDefinition("TransDefn", "TransformedDefinition"),
-    EnumDefinition("EnumDefn", "EnumerationDefinition"),
-    AnonymousListDefinition("AnonListDefn", "AnonymousListStatement"),
-    BlockStmt("BlockStmt", "BlockStatement"),
-	// TODO: Handle PropertyStatement
+    DistributionDefinition("DistrDefn", "Distribution")
     
-    EStatementSubtype(final String identifierString, final String className) {
+    ExtendedDomainSubtype(final String identifierString, final String className) {
         this.identifierString = identifierString
         this.className = className
     }
@@ -32,7 +25,7 @@ public enum EStatementSubtype {
     }
     
     public static boolean containsElementForIdentifier(String identifier) {
-        for(EStatementSubtype e : EStatementSubtype.values()) {
+        for(ExtendedDomainSubtype e : ExtendedDomainSubtype.values()) {
             if(e.getIdentifierString().equals(identifier)) {
                 return true;
             }
@@ -40,9 +33,8 @@ public enum EStatementSubtype {
         return false;
     }
     
-    
-    public static EStatementSubtype findByIdentifier(String identifier) {
-        for(EStatementSubtype e : EStatementSubtype.values()) {
+    public static ExtendedDomainSubtype findByIdentifier(String identifier) {
+        for(ExtendedDomainSubtype e : ExtendedDomainSubtype.values()) {
             if(e.getIdentifierString().equals(identifier)) {
                 return e;
             }

@@ -3,9 +3,6 @@
  ******************************************************************************/
 package eu.ddmore.converter.mdl2json.domain
 
-import java.util.Map;
-
-import eu.ddmore.converter.mdl2json.interfaces.MDLPrintable
 import org.apache.log4j.Logger
 
 /**
@@ -45,42 +42,42 @@ public class StatementFactory {
                     return new ListDefinition(json)
                 }
             } else {
-                for (final EStatementSubtype e : EStatementSubtype.values()) {
-                    if (EStatementSubtype.BlockStmt.getIdentifierString().equals(subtype)) {
-                        // Special case, have to create via BlockStatementFactory
-                        return BlockStatementFactory.fromJSON(json)
-                    }
-                    else if (e.getIdentifierString().equals(subtype)) {
-                        final Class clazz = Class.forName(StatementFactory.class.getPackage().getName()+"."+e.getClassName())
-                        return clazz.newInstance(json)
-                    }
+                if (EStatementSubtype.BlockStmt.getIdentifierString().equals(subtype)) {
+                    // Special case, have to create via BlockStatementFactory
+                    return BlockStatementFactory.fromJSON(json)
+                } else if(EStatementSubtype.containsElementForIdentifier(subtype)) {
+                    final Class clazz = Class.forName(CONVERTER_DOMAIN_PACKAGE_NAME+"."+EStatementSubtype.findByIdentifier(subtype).getClassName())
+                    return clazz.newInstance(json)
+                } else if(ExtendedDomainSubtype.containsElementForIdentifier(subtype)) {
+                    final Class clazz = Class.forName(CONVERTER_DOMAIN_PACKAGE_NAME+"."+ExtendedDomainSubtype.findByIdentifier(subtype).getClassName())
+                    return clazz.newInstance(json)
                 }
             }
         }
     }
     public static Map unmarshallDomainObjects(Map json) {
         if (json) {
-            json.collectEntries { k, v -> 
-                     if(v instanceof Map) {
-                        final String subtype = v.get(AbstractStatement.PROPERTY_SUBTYPE)
-                        if(subtype) {
-                            for (final EStatementSubtype e : EStatementSubtype.values()) {
-                                if (EStatementSubtype.BlockStmt.getIdentifierString().equals(subtype)) {
-                                    // Special case, have to create via BlockStatementFactory
-                                    return [k, BlockStatementFactory.fromJSON(v)]
-                                }
-                                else if (e.getIdentifierString().equals(subtype)) {
-                                    final Class clazz = Class.forName(StatementFactory.class.getPackage().getName()+"."+e.getClassName())
-                                    return [k, clazz.newInstance(v)]
-                                }
-                            }
-                        } else {
-                            return [k, unmarshallDomainObjects(v)]
+            json.collectEntries { k, v ->
+                if(v instanceof Map) {
+                    final String subtype = v.get(AbstractStatement.PROPERTY_SUBTYPE)
+                    if(subtype) {
+                        if (EStatementSubtype.BlockStmt.getIdentifierString().equals(subtype)) {
+                            // Special case, have to create via BlockStatementFactory
+                            return [k, BlockStatementFactory.fromJSON(v)]
+                        } else if(EStatementSubtype.containsElementForIdentifier(subtype)) {
+                            final Class clazz = Class.forName(CONVERTER_DOMAIN_PACKAGE_NAME+"."+EStatementSubtype.findByIdentifier(subtype).getClassName())
+                            return [k, clazz.newInstance(v)]
+                        } else if(ExtendedDomainSubtype.containsElementForIdentifier(subtype)) {
+                            final Class clazz = Class.forName(CONVERTER_DOMAIN_PACKAGE_NAME+"."+ExtendedDomainSubtype.findByIdentifier(subtype).getClassName())
+                            return [k, clazz.newInstance(v)]
                         }
                     } else {
-                     return [k, v]
+                        return [k, unmarshallDomainObjects(v)]
                     }
-                 }
+                } else {
+                    return [k, v]
+                }
+            }
         }
     }
 }

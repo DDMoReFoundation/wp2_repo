@@ -79,6 +79,7 @@ public class BlockStatementFactory {
             case "ESTIMATE":
             case "SIMULATE":
             case "EVALUATE":
+            case "OPTIMISE":
                 return EBlockStatementType.TASKOBJ_BLOCK
             default:
                 return EBlockStatementType.STATEMENTS
