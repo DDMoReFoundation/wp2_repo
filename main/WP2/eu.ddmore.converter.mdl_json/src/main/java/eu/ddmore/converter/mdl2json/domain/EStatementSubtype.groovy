@@ -16,7 +16,7 @@ public enum EStatementSubtype {
     EnumDefinition("EnumDefn", "EnumerationDefinition"),
     AnonymousListDefinition("AnonListDefn", "AnonymousListStatement"),
     BlockStmt("BlockStmt", "BlockStatement"),
-	// TODO: Handle PropertyStatement
+    PropertyStatement("PropertyStmt", "PropertyStatement"),
     
     EStatementSubtype(final String identifierString, final String className) {
         this.identifierString = identifierString

@@ -171,6 +171,7 @@ public abstract class BlockStatement<T> extends AbstractStatement {
         SYMBOL_NAMES,
         STATEMENTS,
         TASKOBJ_BLOCK,
+        PROPERTY_STATEMENT,
         CONTENT
     }
     

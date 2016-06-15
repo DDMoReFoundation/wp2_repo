@@ -27,6 +27,8 @@ public class BlockStatementFactory {
                 return new StatementListBlockStatement(blockName, blkBody, blkAttrsMap)
             case EBlockStatementType.TASKOBJ_BLOCK:
                 return new TaskObjectBlockStatement(blockName, blkBody)
+            case EBlockStatementType.PROPERTY_STATEMENT:
+                return new PropertyStatement(blockName, blkBody, blkAttrsMap)
             case EBlockStatementType.CONTENT:
                 return new TextualContentBlockStatement(blockName, blkBody)
         }
@@ -45,7 +47,7 @@ public class BlockStatementFactory {
     
     public static BlockStatement fromJSON(final Map<String, Object> json) {
         json.remove(BlockStatement.PROPERTY_SUBTYPE) // Its work is done
-        Preconditions.checkState(json.size() == 1, "JSON representation of BlockStatement encountered that does not have exactly one Entry in its Map (excluding the subtype property)")
+        Preconditions.checkState(json.size() == 1, "JSON representation of BlockStatement encountered that does not have exactly one Entry in its Map (excluding the subtype property): ${json}")
         final String blockName = json.keySet().first() // Single Entry in the Map
                 
         switch (getRepresentationType(blockName)) {
@@ -61,6 +63,8 @@ public class BlockStatementFactory {
                 return new StatementListBlockStatement(blockName, ((List<Map>) json[blockName]))
             case EBlockStatementType.TASKOBJ_BLOCK:
                 return new TaskObjectBlockStatement(blockName, (json[blockName].size()>0)?(Map<String, String>)json[blockName]: [:])
+            case EBlockStatementType.PROPERTY_STATEMENT:
+                return new PropertyStatement(blockName, (json[blockName].size()>0)?(Map<String, String>)json[blockName]: [:])
             case EBlockStatementType.CONTENT:
                 return new TextualContentBlockStatement(blockName, (String) json[blockName])
         }
@@ -81,6 +85,8 @@ public class BlockStatementFactory {
             case "EVALUATE":
             case "OPTIMISE":
                 return EBlockStatementType.TASKOBJ_BLOCK
+            case "TARGET_SETTINGS":
+                return EBlockStatementType.PROPERTY_STATEMENT
             default:
                 return EBlockStatementType.STATEMENTS
         }
