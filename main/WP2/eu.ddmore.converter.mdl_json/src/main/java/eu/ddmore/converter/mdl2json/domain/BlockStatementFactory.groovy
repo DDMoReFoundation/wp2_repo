@@ -28,7 +28,7 @@ public class BlockStatementFactory {
             case EBlockStatementType.TASKOBJ_BLOCK:
                 return new TaskObjectBlockStatement(blockName, blkBody)
             case EBlockStatementType.PROPERTY_STATEMENT:
-                return new PropertyStatement(blockName, blkBody, blkAttrsMap)
+                return new PropertyBlockStatement(blockName, blkBody, blkAttrsMap)
             case EBlockStatementType.CONTENT:
                 return new TextualContentBlockStatement(blockName, blkBody)
         }
@@ -64,7 +64,7 @@ public class BlockStatementFactory {
             case EBlockStatementType.TASKOBJ_BLOCK:
                 return new TaskObjectBlockStatement(blockName, (json[blockName].size()>0)?(Map<String, String>)json[blockName]: [:])
             case EBlockStatementType.PROPERTY_STATEMENT:
-                return new PropertyStatement(blockName, (json[blockName].size()>0)?(Map<String, String>)json[blockName]: [:])
+                return new PropertyBlockStatement(blockName, (json[blockName].size()>0)?(Map<String, String>)json[blockName]: [:])
             case EBlockStatementType.CONTENT:
                 return new TextualContentBlockStatement(blockName, (String) json[blockName])
         }

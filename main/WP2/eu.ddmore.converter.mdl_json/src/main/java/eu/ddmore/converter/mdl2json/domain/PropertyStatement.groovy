@@ -1,53 +1,61 @@
 /*******************************************************************************
- * Copyright (C) 2016 Mango Solutions Ltd - All rights reserved.
+ * Copyright (C) 2015 Mango Solutions Ltd - All rights reserved.
  ******************************************************************************/
 package eu.ddmore.converter.mdl2json.domain
 
-import eu.ddmore.converter.mdl2json.utils.KeyValuePairConverter
-
+import eu.ddmore.converter.mdl2json.utils.KeyValuePairConverter;
+import eu.ddmore.mdl.mdl.CategoricalDefinitionExpr;
+import eu.ddmore.mdl.mdl.CategoryValueDefinition;
+import eu.ddmore.mdl.mdl.ValuePair
 
 /**
- * Property statement is a statement of the form:
- * 
- * <code>
- * BLOCK_NAME (attr = "list") {
- *  set key = value
- *  }
- * </code>
- * 
- * The statement's attributes do not follow standard syntax for using 'is' instead of '='.
+ * Represents {@link eu.ddmore.mdl.mdl.PropertyStatement}, a subclass of
+ * {@link eu.ddmore.mdl.mdl.Statement}, for MDL <-> JSON conversion.
+ * <p>
+ * Example MDL:
+ * <pre>
+ * set armSize = 1
+ * </pre>
+ * <p>
+ * Equivalent JSON:
+ * <pre>
+ * {".subtype":"PropertyStmt", "def": {
+                        "armSize": "1"
+                    }}
+ * </pre>
  */
-class PropertyStatement extends BlockStatement<String> {
+public class PropertyStatement extends AbstractStatement {
+    
+    public final static String PROPERTY_VALUE = "def"
 
-    public PropertyStatement(String blockName, eu.ddmore.mdl.mdl.BlockStatementBody blkStmtBody, Map<String,String> blockAttrs) {
-        def taskAttrsMap = [:]
-        blkStmtBody.getStatements().findAll { it instanceof eu.ddmore.mdl.mdl.PropertyStatement }.collect { eu.ddmore.mdl.mdl.PropertyStatement it ->
-            taskAttrsMap.putAll(KeyValuePairConverter.toMap(it.getProperties()))
-        }
-        taskAttrsMap.put(PROPERTY_BLOCKATTRS, blockAttrs)
-        setProperty(blockName, taskAttrsMap)
+    /**
+     * Constructor creating from MDL grammar objects.
+     * <p>
+     * @param enumDefn - {@link eu.ddmore.mdl.mdl.PropertyStatement} object from the MDL grammar
+     */
+    public PropertyStatement(final eu.ddmore.mdl.mdl.PropertyStatement stmt) {
+        setProperty(PROPERTY_SUBTYPE, EStatementSubtype.PropertyStatement.getIdentifierString())
+        setProperty(PROPERTY_VALUE, KeyValuePairConverter.toMap(stmt.getProperties()))
     }
-    public PropertyStatement(final String blockName, final Map<String, String> json) {
-        setProperty(blockName, json)
+    
+    /**
+     * Constructor creating from JSON.
+     * <p>
+     * @param json - {@link Map} of content
+     */
+    public PropertyStatement(final Map json) {
+        super(json)
     }
+    
     @Override
     public String toMDL() {
         final StringBuffer sb = new StringBuffer()
         sb.append(IDT)
-        sb.append(getBlockName())
-        Map content = getBlockRepresentation();
-        if(content[PROPERTY_BLOCKATTRS] && content[PROPERTY_BLOCKATTRS].size()>0) {
-            sb.append("(")
-            //we don't use KeyValuePairConverter here as we don't want the 'is' to substitute '='
-            sb.append(content[PROPERTY_BLOCKATTRS].collect { key, value -> "${key}=${value}"} .join("\n"))
-            sb.append(")")
+        sb.append(IDT)
+        getProperty(PROPERTY_VALUE).each { k,v ->
+        sb.append("set ${k} = ${v}")
         }
-        sb.append(" {\n")
-        sb.append(content.findAll {k, v -> !PROPERTY_BLOCKATTRS.equals(k)} .collect {
-            k, v -> IDT + IDT + "set " + KeyValuePairConverter.toMDL(k, v)
-        }.join("\n"))
-        sb.append("\n${IDT}}\n")
         sb.toString()
     }
-
+        
 }
