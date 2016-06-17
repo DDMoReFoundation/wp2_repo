@@ -2,8 +2,8 @@ warfarin_PK_SEX_design = designObj{
   DECLARED_VARIABLES{
   	INPUT_KA :: dosingTarget
   	INPUT_CENTRAL :: dosingTarget
-  	CC :: continuousObs
-  	Y :: continuousObs
+  	CC :: observation
+  	Y :: observation
   	SEX withCategories{female, male}
   }
 

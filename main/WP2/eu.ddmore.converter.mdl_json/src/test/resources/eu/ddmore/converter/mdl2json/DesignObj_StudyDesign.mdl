@@ -12,7 +12,7 @@
 simeoni2004_design = designObj{
 	DECLARED_VARIABLES{ 
 		Q1::dosingTarget
-		Y::continuousObs
+		Y::observation
 	}
 	
 	INTERVENTION{
