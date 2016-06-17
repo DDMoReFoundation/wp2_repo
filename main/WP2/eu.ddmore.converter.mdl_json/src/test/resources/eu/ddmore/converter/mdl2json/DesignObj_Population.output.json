@@ -74,12 +74,12 @@
                 {
                     ".subtype": "EquationDef",
                     "name": "CC",
-                    "typeSpec": "continuousObs"
+                    "typeSpec": "observation"
                 },
                 {
                     ".subtype": "EquationDef",
                     "name": "Y",
-                    "typeSpec": "continuousObs"
+                    "typeSpec": "observation"
                 },
                 {
                     ".subtype": "EnumDefn",
