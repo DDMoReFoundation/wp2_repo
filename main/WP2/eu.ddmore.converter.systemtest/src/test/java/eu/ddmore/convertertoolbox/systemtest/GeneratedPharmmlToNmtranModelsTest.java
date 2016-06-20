@@ -1,7 +1,6 @@
 package eu.ddmore.convertertoolbox.systemtest;
 
 import java.io.File;
-import java.util.List;
 
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
@@ -10,10 +9,10 @@ import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 
-import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Function;
 import com.google.common.base.Preconditions;
+import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
 /**
@@ -54,15 +53,16 @@ public class GeneratedPharmmlToNmtranModelsTest extends ConverterATParent {
         final File atWd = ModelsTestHelper.resolveAcceptanceTestSuiteWorkingDirectory(NAME);
         atWd.mkdirs();
         ObjectMapper objectMapper = new ObjectMapper();
-        List<Object[]> models = objectMapper.readValue(new File(mdlToPharmMLATRoot,ModelsTestHelper.TEST_RECORD_FILE), new TypeReference<List<String[]>>() {});
+        Iterable<Object[]> models = MdlToPharmmlModelsTest.MODELS;
         
-        Iterable<Object[]> result = Lists.transform(
+        Iterable<Object[]> result = Iterables.transform(
             models,
             new Function<Object[], Object[]>() {
                 public Object[] apply(Object[] conversionRecord) {
                     File mdlToPharmMLAt = new File(conversionRecord[0].toString());
                     File pharmmlToNmTranAT = new File(atWd, mdlToPharmMLAt.getName());
                     final String anticipatedGenPharmmlModelShortPath = FilenameUtils.removeExtension(conversionRecord[1].toString()) +"."+ FileType.PharmML.getExtension();
+                    LOG.info(String.format("Expected path of input PharmML file: %s", anticipatedGenPharmmlModelShortPath));
                     return new Object[] { pharmmlToNmTranAT, anticipatedGenPharmmlModelShortPath, mdlToPharmMLAt };
                 }
             }

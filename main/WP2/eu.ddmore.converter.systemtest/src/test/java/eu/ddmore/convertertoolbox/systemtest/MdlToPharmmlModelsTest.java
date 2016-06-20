@@ -32,6 +32,12 @@ public class MdlToPharmmlModelsTest extends ConverterATParent {
     private final static String MODELS_SUBDIRECTORY = "MDL" + File.separator + FileType.MDL.getVersion();
     
     /**
+     * Collection of models that should be executed by the test.
+     * We keep this value as it is used by {@link GeneratedPharmmlToNmtranModelsTest} 
+     */
+    public static Iterable<Object[]> MODELS;
+    
+    /**
      * The method that produces the parameters to be passed to each construction of the test class.
      * In this case, the {@link File}s that are the models for which to test the conversion.
      * <p>
@@ -52,10 +58,10 @@ public class MdlToPharmmlModelsTest extends ConverterATParent {
         ModelsTestHelper.prepareTestSystemProperties();
         File atWd = ModelsTestHelper.resolveAcceptanceTestSuiteWorkingDirectory(NAME);
         atWd.mkdirs();
-        Iterable<Object[]> result = filterOutMDLFilesWithMissingMOG(ModelsTestHelper.getModelsToTest(MODELS_SUBDIRECTORY, FileType.MDL.getExtension(),atWd));
+        MODELS = filterOutMDLFilesWithMissingMOG(ModelsTestHelper.getModelsToTest(MODELS_SUBDIRECTORY, FileType.MDL.getExtension(),atWd));
         ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.writeValue(new File(atWd,ModelsTestHelper.TEST_RECORD_FILE), Lists.newArrayList(result));
-        return result;
+        objectMapper.writeValue(new File(atWd,ModelsTestHelper.TEST_RECORD_FILE), Lists.newArrayList(MODELS));
+        return MODELS;
     }
 
     private static Iterable<Object[]> filterOutMDLFilesWithMissingMOG(final Iterable<Object[]> discoveredMdlFiles) {
