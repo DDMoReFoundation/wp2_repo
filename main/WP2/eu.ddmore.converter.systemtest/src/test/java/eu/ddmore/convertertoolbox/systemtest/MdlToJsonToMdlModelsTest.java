@@ -65,6 +65,7 @@ public class MdlToJsonToMdlModelsTest extends ConverterATParent {
     
     @Test
     public void convertsMdlToJsonAndThenBackToMdl() throws IOException {
+        prepareWorkingDirectory();
         final File mdlModelFile = getModelAbsoluteFile();
             
         final ConverterRunner runner1 = new ConverterRunner(mdlModelFile, FileType.JSON.getExtension(),

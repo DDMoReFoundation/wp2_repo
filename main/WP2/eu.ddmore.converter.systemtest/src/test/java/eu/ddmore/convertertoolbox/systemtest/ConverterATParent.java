@@ -60,6 +60,7 @@ public class ConverterATParent {
     
     private final String model;
     private final File workingDirectory;
+    private final File testDataDir;
     
     /**
      * Construct an instance of this test class for a particular model.
@@ -74,11 +75,7 @@ public class ConverterATParent {
     public ConverterATParent(final File workingDirectory, final String model, final File testDataDir) {
         this.model = model;
         this.workingDirectory = workingDirectory;
-        try {
-            FileUtils.copyDirectory(testDataDir, workingDirectory);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
+        this.testDataDir = testDataDir;
     }
     
     /**
@@ -95,10 +92,25 @@ public class ConverterATParent {
         return model;
     }
     
+    
+    public File getTestDataDir() {
+        return testDataDir;
+    }
+
     /**
      * @return absolute File path to a model 
      */
     public File getModelAbsoluteFile() {
         return new File(getWorkingDirectory(), getModel());
+    }
+    
+
+    protected void prepareWorkingDirectory() {
+        try {
+            LOG.info(String.format("Copying test data from: %s to working directory: %s", getTestDataDir(), getWorkingDirectory()));
+            FileUtils.copyDirectory(getTestDataDir(), getWorkingDirectory());
+        } catch (IOException e) {
+            throw new IllegalStateException(e);
+        }
     }
 }

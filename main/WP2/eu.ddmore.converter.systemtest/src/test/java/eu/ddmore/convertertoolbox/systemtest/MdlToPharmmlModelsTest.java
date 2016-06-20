@@ -107,6 +107,7 @@ public class MdlToPharmmlModelsTest extends ConverterATParent {
      */
     @Test
     public void convertsMdlToPharmML() throws IOException {
+        prepareWorkingDirectory();
         final ConverterRunner runner = new ConverterRunner(
             getModelAbsoluteFile(), FileType.PharmML.getExtension(),
             FileType.MDL.name(), FileType.MDL.getVersion(), FileType.PharmML.name(), FileType.PharmML.getVersion(),

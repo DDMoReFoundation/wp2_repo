@@ -1,7 +1,9 @@
 package eu.ddmore.convertertoolbox.systemtest;
 
 import java.io.File;
+import java.io.IOException;
 
+import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
@@ -80,6 +82,8 @@ public class GeneratedPharmmlToNmtranModelsTest extends ConverterATParent {
 
     @Test
     public void convertPharmMLGeneratedByMdlToPharmMLConversionToNMTRAN() {
+        prepareWorkingDirectory();
+        
         File modelFile = getModelAbsoluteFile();
         Preconditions.checkState(modelFile.exists(), "Generated PharmML model \"%s\" was not found. Was MdlToPharmmlModelsTest run first?", modelFile);
 

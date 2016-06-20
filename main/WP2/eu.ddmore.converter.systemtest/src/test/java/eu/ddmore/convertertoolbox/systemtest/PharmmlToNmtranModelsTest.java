@@ -61,6 +61,7 @@ public class PharmmlToNmtranModelsTest extends ConverterATParent {
 
     @Test
     public void convertsPharmMLToNMTRAN() {
+        prepareWorkingDirectory();
         new ConverterRunner(
             getModelAbsoluteFile(), FileType.NMTRAN.getExtension(), FileType.PharmML.name(), FileType.PharmML.getVersion(), FileType.NMTRAN.name(), FileType.NMTRAN.getVersion(),
             new NmTranCompilationChecker(System.getProperty(ModelsTestHelper.NONMEM_COMPILER_PARAMETERS_PROP),new File(System.getProperty(ModelsTestHelper.NONMEM_COMPILER_EXECUTABLE_PROP)).getAbsoluteFile())
