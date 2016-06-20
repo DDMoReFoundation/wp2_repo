@@ -42,41 +42,65 @@ public class StatementFactory {
                     return new ListDefinition(json)
                 }
             } else {
-                if (EStatementSubtype.BlockStmt.getIdentifierString().equals(subtype)) {
-                    // Special case, have to create via BlockStatementFactory
-                    return BlockStatementFactory.fromJSON(json)
-                } else if(EStatementSubtype.containsElementForIdentifier(subtype)) {
-                    final Class clazz = Class.forName(CONVERTER_DOMAIN_PACKAGE_NAME+"."+EStatementSubtype.findByIdentifier(subtype).getClassName())
-                    return clazz.newInstance(json)
-                } else if(ExtendedDomainSubtype.containsElementForIdentifier(subtype)) {
-                    final Class clazz = Class.forName(CONVERTER_DOMAIN_PACKAGE_NAME+"."+ExtendedDomainSubtype.findByIdentifier(subtype).getClassName())
-                    return clazz.newInstance(json)
-                }
+                return unmarshallDomainObject(json)
             }
         }
     }
+    
+    private static Object unmarshallDomainObject(Map json) {
+        final String subtype = json.get(AbstractStatement.PROPERTY_SUBTYPE)
+        if (EStatementSubtype.BlockStmt.getIdentifierString().equals(subtype)) {
+            // Special case, have to create via BlockStatementFactory
+            return BlockStatementFactory.fromJSON(json)
+        } else if(EStatementSubtype.containsElementForIdentifier(subtype)) {
+            final Class clazz = Class.forName(CONVERTER_DOMAIN_PACKAGE_NAME+"."+EStatementSubtype.findByIdentifier(subtype).getClassName())
+            return clazz.newInstance(json)
+        } else if(ExtendedDomainSubtype.containsElementForIdentifier(subtype)) {
+            final Class clazz = Class.forName(CONVERTER_DOMAIN_PACKAGE_NAME+"."+ExtendedDomainSubtype.findByIdentifier(subtype).getClassName())
+            return clazz.newInstance(json)
+        } else {
+            throw new IllegalStateException("Unrecognized type ${subtype}.")
+        }
+    }
+    
     public static Map unmarshallDomainObjects(Map json) {
         if (json) {
             json.collectEntries { k, v ->
+                def result
                 if(v instanceof Map) {
                     final String subtype = v.get(AbstractStatement.PROPERTY_SUBTYPE)
                     if(subtype) {
-                        if (EStatementSubtype.BlockStmt.getIdentifierString().equals(subtype)) {
-                            // Special case, have to create via BlockStatementFactory
-                            return [k, BlockStatementFactory.fromJSON(v)]
-                        } else if(EStatementSubtype.containsElementForIdentifier(subtype)) {
-                            final Class clazz = Class.forName(CONVERTER_DOMAIN_PACKAGE_NAME+"."+EStatementSubtype.findByIdentifier(subtype).getClassName())
-                            return [k, clazz.newInstance(v)]
-                        } else if(ExtendedDomainSubtype.containsElementForIdentifier(subtype)) {
-                            final Class clazz = Class.forName(CONVERTER_DOMAIN_PACKAGE_NAME+"."+ExtendedDomainSubtype.findByIdentifier(subtype).getClassName())
-                            return [k, clazz.newInstance(v)]
-                        }
+                        result = [k, unmarshallDomainObject(v)]
                     } else {
-                        return [k, unmarshallDomainObjects(v)]
+                        result = [k, unmarshallDomainObjects(v)]
                     }
+                } else if( v instanceof List) {
+                    result = [k, unmarshallDomainObjects(v)]
                 } else {
-                    return [k, v]
+                    result = [k, v]
                 }
+                return result
+            }
+        }
+    }
+    
+    public static List unmarshallDomainObjects(List list) {
+        if (list) {
+            list.collect  { v ->
+                def result;
+                if(v instanceof Map) {
+                    final String subtype = v.get(AbstractStatement.PROPERTY_SUBTYPE)
+                    if(subtype) {
+                        result = unmarshallDomainObject(v)
+                    } else {
+                        result = unmarshallDomainObjects(v)
+                    }
+                } else if( v instanceof List) {
+                    result = unmarshallDomainObjects(v)
+                } else {
+                    result = v
+                }
+                return result
             }
         }
     }

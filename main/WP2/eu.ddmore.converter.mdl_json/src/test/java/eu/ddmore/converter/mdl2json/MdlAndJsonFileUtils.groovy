@@ -8,16 +8,18 @@ import static org.junit.Assert.*
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.StringUtils
 import org.apache.log4j.Logger
+import org.eclipse.emf.ecore.util.EcoreUtil
 
 import com.google.common.base.Preconditions
 
+import eu.ddmore.converter.treerewrite.VectorAttributeRewrite
 import eu.ddmore.convertertoolbox.api.response.ConversionReport
 import eu.ddmore.convertertoolbox.api.response.ConversionReport.ConversionCode
 import eu.ddmore.convertertoolbox.domain.ConversionReportImpl
 import eu.ddmore.mdlparse.MdlParser
 import groovy.json.JsonBuilder
-import groovy.json.JsonSlurper
 import groovy.json.JsonOutput
+import groovy.json.JsonSlurper
 
 
 class MdlAndJsonFileUtils {
@@ -75,7 +77,8 @@ class MdlAndJsonFileUtils {
     public static Object getJsonFromMDLFile(final File srcFile) {
 
         final ConversionReport report = new ConversionReportImpl()
-        final eu.ddmore.mdl.mdl.Mcl mcl = new MdlParser().parse(srcFile, report)
+        final eu.ddmore.mdl.mdl.Mcl orig = new MdlParser().parse(srcFile, report)
+        final eu.ddmore.mdl.mdl.Mcl mcl = expandShorthands(orig)
 
         Preconditions.checkArgument(mcl != null,
             "Unable to parse MDL file " + srcFile + "; check the log files for exceptions that might have been thrown")
@@ -97,6 +100,12 @@ class MdlAndJsonFileUtils {
         slurper.parseText(jsonText)
     }
     
+    private static expandShorthands(eu.ddmore.mdl.mdl.Mcl orig) {
+        final eu.ddmore.mdl.mdl.Mcl mcl = EcoreUtil.copy(orig)
+        final VectorAttributeRewrite vectArgR = new VectorAttributeRewrite();
+        mcl.eAllContents().each {vectArgR.doSwitch(it)}
+        return mcl
+    }
     /**
      * Convert an {@link eu.ddmore.mdl.mdl.Mcl} object into JSON.
      *

@@ -3,13 +3,16 @@
  ******************************************************************************/
 package eu.ddmore.converter.mdl2json.utils
 
+import org.apache.commons.lang.builder.ToStringBuilder
+
 import eu.ddmore.converter.mdl2json.domain.Distribution
 import eu.ddmore.mdl.mdl.AssignPair
-import eu.ddmore.mdl.mdl.FuncArguments;
 import eu.ddmore.mdl.mdl.NamedFuncArguments
 import eu.ddmore.mdl.mdl.SubListExpression
 import eu.ddmore.mdl.mdl.ValuePair
-import eu.ddmore.mdl.utils.MdlExpressionConverter;
+import eu.ddmore.mdl.mdl.VectorElement
+import eu.ddmore.mdl.mdl.VectorLiteral
+import eu.ddmore.mdl.utils.MdlExpressionConverter
 
 /**
  * Attributes of the form <code>key = value</code> are not always represented
@@ -24,25 +27,65 @@ import eu.ddmore.mdl.utils.MdlExpressionConverter;
  */
 public class KeyValuePairConverter {
     
-    final static Collection<String> IS_REPRESENTATION_ATTR_NAMES = [ "type", "use", "inputFormat", "link", "event", "trans", "target", "algo", "solver", "element" ]
+    final static Collection<String> IS_REPRESENTATION_ATTR_NAMES = [ "type", "use", "inputFormat", "link", "event", "trans", "target", "algo", "solver", "element", "optAlgo" ]
     final static DISTRIBUTION_OP = "~"
     
     public static String toMDL(final Map.Entry<String, String> entry) {
         toMDL(entry.getKey(), entry.getValue())
     }
     
+    /**
+     * Converts a map to MDL.
+     */
     public static String toMDL(final Map<String, String> map) {
         map.sort().collect { k, v -> toMDL(k, v) }.join(", ")
     }
-    
+   
+    /**
+     * Prints a key-value pair using appropriate assignment operator
+     */
     public static String toMDL(final String key, final Object value) {
+        String result = null
         if (IS_REPRESENTATION_ATTR_NAMES.contains(key)) {
-            "${key} is ${value}"
+            result = "${key} is ${value}"
         } else if(value instanceof Distribution) {
-            "${key} ${DISTRIBUTION_OP} ${value.toMDL()}"
+            result = "${key} ${DISTRIBUTION_OP} ${value.toMDL()}"
         } else {
-            "${key}=${value}"
+            result = key + " = " + toMDL(value)
         }
+        return result
+    }
+    
+    /**
+     * Produces MDL representation of a list of values (in MDL being a 'vector').
+     * 
+     * It delegates transformation to appropriate implementation of the 'toMDL' implementation and if such doesn't exist it simply invokes 'toString'.
+     */
+    public static String toMDL(List value) {
+        String result = value.sort().collect {
+            if(it.getMetaClass().getMetaMethod("toMDL", null)) {
+                return it.toMDL()
+            } else if(KeyValuePairConverter.getMetaClass().getMetaMethod("toMDL", it)) {
+                if(it instanceof Map) { 
+                    return "{" + KeyValuePairConverter.toMDL(it) + "}"
+                } else {
+                    return KeyValuePairConverter.toMDL(it)
+                }
+            } else {
+                return it.toString()
+            }
+        }.join(", ")
+        
+        // if the list is of size less or equal to one skip the square-brackets 
+        if(value.size() > 1) {
+            return "[" + result + "]"
+        } else {
+            return result
+        }
+    }
+    
+    public static toMDL(Object value) {
+        return value.toString()
     }
     
     public static String toMDL(final String key, final Map value) {
@@ -58,17 +101,36 @@ public class KeyValuePairConverter {
         valuePairsMap
     }
     
-    public static Object toInternalRepresentation(ValuePair valuePair) {
+    /**
+     * Parses MDL's vector as a list.
+     */
+    private static List<Object> vectorToList(final List<VectorElement> elementsList) {
+        final List<Object> valuePairsMap = []
+        elementsList.each {
+            VectorElement vp -> 
+            if(vp.getElement() instanceof SubListExpression) {
+                valuePairsMap.add(toMap(vp.getElement().getAttributes()))
+            } else {
+                valuePairsMap.add(MdlExpressionConverter.convertToString(vp.getElement()))
+            }
+        }
+        valuePairsMap
+    }
+    
+    private static Object toInternalRepresentation(ValuePair valuePair) {
         if(valuePair instanceof AssignPair) {
-            return assignToInternalRepresentation(valuePair)
+            return assignPairToInternalRepresentation(valuePair)
         }
         return  MdlExpressionConverter.convertToString(valuePair.getExpression())
     }
     
-    public static Object assignToInternalRepresentation(AssignPair assignPair) {
+    private static Object assignPairToInternalRepresentation(AssignPair assignPair) {
         def expr = assignPair.getExpression();
         if (expr instanceof SubListExpression) {
             return toMap(expr.getAttributes())
+        }
+        if (expr instanceof VectorLiteral) {
+            return vectorToList(expr.getExpressions())
         }
         if(assignPair.assignOp==DISTRIBUTION_OP) {
             return new Distribution(MdlExpressionConverter.convertToString(expr))

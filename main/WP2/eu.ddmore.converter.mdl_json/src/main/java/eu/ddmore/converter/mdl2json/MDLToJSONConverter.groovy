@@ -6,7 +6,10 @@ package eu.ddmore.converter.mdl2json
 import org.apache.log4j.Logger
 import eu.ddmore.mdl.mdl.Mcl
 
+import org.eclipse.emf.ecore.util.EcoreUtil;
+
 import eu.ddmore.converter.mdl2json.domain.Mcl
+import eu.ddmore.converter.treerewrite.VectorAttributeRewrite
 import eu.ddmore.convertertoolbox.api.domain.LanguageVersion
 import eu.ddmore.convertertoolbox.api.domain.Version
 import eu.ddmore.convertertoolbox.api.response.ConversionReport
@@ -42,7 +45,9 @@ public class MDLToJSONConverter implements ConverterProvider {
         // We know we're going to return a conversion report so create it up front; it is added to at various places in this method
         final ConversionReport report = new ConversionReportImpl()
 
-        final eu.ddmore.mdl.mdl.Mcl mcl = new MdlParser().parse(src, report)
+        final eu.ddmore.mdl.mdl.Mcl orig = new MdlParser().parse(src, report)
+        
+        final eu.ddmore.mdl.mdl.Mcl mcl = expandShorthands(orig)
         
         if (ConversionCode.FAILURE.equals(report.getReturnCode())) {
             return report // Bail out - couldn't parse the MDL
@@ -58,6 +63,13 @@ public class MDLToJSONConverter implements ConverterProvider {
         } else {
             throw new RuntimeException("Couldn't write out JSON from MDL parsed from file " + src.getPath())
         }
+    }
+
+    private expandShorthands(eu.ddmore.mdl.mdl.Mcl orig) {
+        final eu.ddmore.mdl.mdl.Mcl mcl = EcoreUtil.copy(orig)
+        final VectorAttributeRewrite vectArgR = new VectorAttributeRewrite();
+        mcl.eAllContents().each {vectArgR.doSwitch(it)}
+        return mcl
     }
 
     /**
@@ -116,4 +128,5 @@ public class MDLToJSONConverter implements ConverterProvider {
     public String toString() {
         return String.format("MDL to JSON Converter [source=%s, target=%s, converterVersion=%s]", source, target, converterVersion)
     }
+    
 }
