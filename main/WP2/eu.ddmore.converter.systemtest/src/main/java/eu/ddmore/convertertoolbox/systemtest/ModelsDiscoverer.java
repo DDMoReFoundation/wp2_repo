@@ -1,8 +1,11 @@
 package eu.ddmore.convertertoolbox.systemtest;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
+import java.util.List;
 
 import org.apache.commons.io.FileUtils;
 import org.apache.log4j.Logger;
@@ -30,7 +33,10 @@ public class ModelsDiscoverer {
         		LOG.info("Found model file: " + modelFile);
         	}
         }
-        return allModelFiles;
+        List<File> result = new ArrayList<>();
+        result.addAll(allModelFiles);
+        Collections.sort(result);
+        return result;
     }
 
 }

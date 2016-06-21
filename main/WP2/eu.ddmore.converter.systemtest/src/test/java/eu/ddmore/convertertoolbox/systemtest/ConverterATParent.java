@@ -76,6 +76,7 @@ public class ConverterATParent {
         this.model = model;
         this.workingDirectory = workingDirectory;
         this.testDataDir = testDataDir;
+        LOG.info(String.format("[%s]. Conversion test created for: %s, %s, %s", this.getClass(), model, getWorkingDirectory(), getTestDataDir()));
     }
     
     /**

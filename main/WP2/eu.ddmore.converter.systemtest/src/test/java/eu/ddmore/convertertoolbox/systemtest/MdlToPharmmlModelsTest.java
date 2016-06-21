@@ -17,6 +17,7 @@ import org.junit.runners.Parameterized;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Predicate;
+import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -40,7 +41,7 @@ public class MdlToPharmmlModelsTest extends ConverterATParent {
     static {
         ModelsTestHelper.prepareTestSystemProperties();
         File atWd = ModelsTestHelper.resolveAcceptanceTestSuiteWorkingDirectory(NAME);
-        MODELS = filterOutMDLFilesWithMissingMOG(ModelsTestHelper.getModelsToTest(MODELS_SUBDIRECTORY, FileType.MDL.getExtension(),atWd));
+        MODELS = Iterables.unmodifiableIterable(filterOutMDLFilesWithMissingMOG(ModelsTestHelper.getModelsToTest(MODELS_SUBDIRECTORY, FileType.MDL.getExtension(),atWd)));
     }
     /**
      * The method that produces the parameters to be passed to each construction of the test class.
