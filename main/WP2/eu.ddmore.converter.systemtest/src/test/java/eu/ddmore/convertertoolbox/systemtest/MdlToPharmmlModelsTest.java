@@ -37,6 +37,11 @@ public class MdlToPharmmlModelsTest extends ConverterATParent {
      */
     public static Iterable<Object[]> MODELS;
     
+    static {
+        ModelsTestHelper.prepareTestSystemProperties();
+        File atWd = ModelsTestHelper.resolveAcceptanceTestSuiteWorkingDirectory(NAME);
+        MODELS = filterOutMDLFilesWithMissingMOG(ModelsTestHelper.getModelsToTest(MODELS_SUBDIRECTORY, FileType.MDL.getExtension(),atWd));
+    }
     /**
      * The method that produces the parameters to be passed to each construction of the test class.
      * In this case, the {@link File}s that are the models for which to test the conversion.
@@ -54,11 +59,10 @@ public class MdlToPharmmlModelsTest extends ConverterATParent {
      */
     @Parameterized.Parameters(name= "{index}: Model {1}")
     public static Iterable<Object[]> getModelsToTest() throws Exception {
-        LOG.info(String.format("Preparing parameters for %s.",MdlToPharmmlModelsTest.class));
         ModelsTestHelper.prepareTestSystemProperties();
+        LOG.info(String.format("Preparing parameters for %s.",MdlToPharmmlModelsTest.class));
         File atWd = ModelsTestHelper.resolveAcceptanceTestSuiteWorkingDirectory(NAME);
         atWd.mkdirs();
-        MODELS = filterOutMDLFilesWithMissingMOG(ModelsTestHelper.getModelsToTest(MODELS_SUBDIRECTORY, FileType.MDL.getExtension(),atWd));
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.writeValue(new File(atWd,ModelsTestHelper.TEST_RECORD_FILE), Lists.newArrayList(MODELS));
         return MODELS;

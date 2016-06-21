@@ -1,9 +1,6 @@
 package eu.ddmore.convertertoolbox.systemtest;
 
 import java.io.File;
-import java.io.IOException;
-
-import org.apache.commons.io.FileUtils;
 import org.apache.commons.io.FilenameUtils;
 import org.apache.log4j.Logger;
 import org.junit.AfterClass;
@@ -64,12 +61,12 @@ public class GeneratedPharmmlToNmtranModelsTest extends ConverterATParent {
                     File mdlToPharmMLAt = new File(conversionRecord[0].toString());
                     File pharmmlToNmTranAT = new File(atWd, mdlToPharmMLAt.getName());
                     final String anticipatedGenPharmmlModelShortPath = FilenameUtils.removeExtension(conversionRecord[1].toString()) +"."+ FileType.PharmML.getExtension();
-                    LOG.info(String.format("Expected path of input PharmML file: %s", anticipatedGenPharmmlModelShortPath));
                     return new Object[] { pharmmlToNmTranAT, anticipatedGenPharmmlModelShortPath, mdlToPharmMLAt };
                 }
             }
             );
         objectMapper.writeValue(new File(atWd,ModelsTestHelper.TEST_RECORD_FILE), Lists.newArrayList(result));
+        LOG.info(String.format("Found %s models to convert.",Iterables.size(result)));
         return result;
     }
 
