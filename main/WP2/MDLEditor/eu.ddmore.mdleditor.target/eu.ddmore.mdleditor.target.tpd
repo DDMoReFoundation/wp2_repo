@@ -44,6 +44,8 @@ org.eclipse.xtext.sdk.feature.group
 org.eclipse.xtext.runtime.feature.group
 org.eclipse.xtext.ui.feature.group
 org.eclipse.xtext.xtext.ui.feature.group
+org.eclipse.egit.feature.group
+org.eclipse.jgit.feature.group
 } 
 
 location "http://sourceforge.net/projects/ddmore/files/update/mdl-ide-dependencies/0.0.1/release/" ddmore-deps {  
@@ -97,3 +99,12 @@ location "http://download.walware.de/eclipse-4.4/site-statet-03.04.00/" walware-
 location "http://sourceforge.net/projects/ddmore/files/update/libpharmml/0.7-1" libpharmml-repo {  
 eu.ddmore.libpharmml.feature.feature.group
 } 
+
+location "http://sourceforge.net/projects/ddmore/files/update/mdl-plugin/snapshot" mdlplugin-repo {  
+eu.ddmore.mdl.feature.feature.group
+} 
+
+location "http://sourceforge.net/projects/ddmore/files/update/mdllib-plugin/snapshot" mdllibplugin-repo {  
+eu.ddmore.mdllib.sdk.feature.group
+} 
+
