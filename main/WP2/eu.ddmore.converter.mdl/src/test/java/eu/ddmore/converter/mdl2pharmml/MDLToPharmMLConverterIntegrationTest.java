@@ -40,11 +40,6 @@ public class MDLToPharmMLConverterIntegrationTest {
     
     private MDLToPharmMLConverter converter;
 
-    /**
-     * Set-up tasks prior to each test being run.
-     * <p>
-     * @throws IOException 
-     */
     @Before
     public void setUp() throws IOException {
     
@@ -71,10 +66,6 @@ public class MDLToPharmMLConverterIntegrationTest {
         this.converter = new MDLToPharmMLConverter();
     }
     
-    /**
-     * Test method for {@link eu.ddmore.converter.mdl2pharmml.MDLToPharmMLConverter#performConvert(java.io.File, java.io.File)}.
-     * @throws IOException 
-     */
     @Test
     public void testPerformConvertForValidMdlFile() throws IOException {
         assertFalse("Converted PharmML file should not initially exist", validPharmmlFile.exists());
@@ -86,11 +77,7 @@ public class MDLToPharmMLConverterIntegrationTest {
         final List<ConversionDetail> warnings = report.getDetails(Severity.WARNING);
         assertTrue("Checking that no warnings were returned", warnings.isEmpty());
     }
-    
-    /**
-     * Test method for {@link eu.ddmore.converter.mdl2pharmml.MDLToPharmMLConverter#performConvert(java.io.File, java.io.File)}.
-     * @throws IOException 
-     */
+
     @Test
     public void testPerformConvertForMdlFileWithSyntaxErrors() throws IOException {
         assertFalse("Converted PharmML file should not initially exist", syntaxErrorsPharmmlFile.exists());
@@ -100,23 +87,15 @@ public class MDLToPharmMLConverterIntegrationTest {
         assertEquals("Checking the number of errors that were returned", 2, report.getDetails(Severity.ERROR).size());
     }
     
-    /**
-     * Test method for {@link eu.ddmore.converter.mdl2pharmml.MDLToPharmMLConverter#performConvert(java.io.File, java.io.File)}.
-     * @throws IOException 
-     */
     @Test
     public void testPerformConvertForMdlFileWithSemanticErrors() throws IOException {
         assertFalse("Converted PharmML file should not initially exist", semanticErrorsPharmmlFile.exists());
         final ConversionReport report = converter.performConvert(semanticErrorsMdlFile, workingFolder.getRoot());
         assertEquals("Checking for failure return code", ConversionCode.FAILURE, report.getReturnCode());
         assertFalse("No converted PharmML file should have been created", semanticErrorsPharmmlFile.exists());
-        assertEquals("Checking the number of errors that were returned", 3, report.getDetails(Severity.ERROR).size());
+        assertEquals("Checking the number of errors that were returned", 4, report.getDetails(Severity.ERROR).size());
     }
     
-    /**
-     * Test method for {@link eu.ddmore.converter.mdl2pharmml.MDLToPharmMLConverter#performConvert(java.io.File, java.io.File)}.
-     * @throws IOException 
-     */
     @Test
     @Ignore("Need to generate test data")
     public void testPerformConvertForMdlFileWithSemanticWarnings() throws IOException {
@@ -130,10 +109,6 @@ public class MDLToPharmMLConverterIntegrationTest {
         assertEquals("Checking the number of errors that were returned", 2, warnings.size());
     }
     
-    /**
-     * Test method for {@link eu.ddmore.converter.mdl2pharmml.MDLToPharmMLConverter#performConvert(java.io.File, java.io.File)}.
-     * @throws IOException 
-     */
     @Test
     @Ignore("Need to generate test data")
     public void testPerformConvertForMdlFileWithUnsupportedFeatureWarningsThatShouldBeTreatedAsErrors() throws IOException {
