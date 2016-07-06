@@ -18,7 +18,7 @@ import com.google.common.collect.Lists;
 /**
  * Run MDL -> JSON conversions over the testdata models within the "MDL" subdirectory.
  */
-@RunWith(ParallelizedRunner.class)
+@RunWith(Parameterized.class)
 public class MdlToJsonModelsTest extends ConverterATParent {
     private final static Logger LOG = Logger.getLogger(MdlToJsonModelsTest.class);
     private final static String NAME = "MdlToJsonModelsTest";

@@ -17,7 +17,6 @@ import org.junit.runners.Parameterized;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.google.common.base.Predicate;
-import com.google.common.collect.ImmutableSet;
 import com.google.common.collect.Iterables;
 import com.google.common.collect.Lists;
 
@@ -25,7 +24,7 @@ import com.google.common.collect.Lists;
 /**
  * Run MDL -> PharmML conversions over the testdata models within the "MDL" subdirectory.
  */
-@RunWith(ParallelizedRunner.class)
+@RunWith(Parameterized.class)
 public class MdlToPharmmlModelsTest extends ConverterATParent {
     private final static Logger LOG = Logger.getLogger(MdlToPharmmlModelsTest.class);
     final static String NAME = "MdlToPharmmlModelsTest";

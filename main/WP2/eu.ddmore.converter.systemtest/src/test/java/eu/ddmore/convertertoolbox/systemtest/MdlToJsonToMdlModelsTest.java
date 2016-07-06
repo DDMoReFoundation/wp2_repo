@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
  * Minimal checks are done on the MDL -> JSON bit of the pipeline since there is a separate
  * test class, {@link MdlToJsonModelsTest}, for this.
  */
-@RunWith(ParallelizedRunner.class)
+@RunWith(Parameterized.class)
 public class MdlToJsonToMdlModelsTest extends ConverterATParent {
     private final static Logger LOG = Logger.getLogger(MdlToJsonToMdlModelsTest.class);
     private final static String NAME = "MdlToJsonToMdlModelsTest";

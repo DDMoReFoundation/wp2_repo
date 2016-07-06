@@ -21,7 +21,7 @@ import com.google.common.collect.Lists;
  * {@link MdlToPharmmlModelsTest} runs the MDL -> PharmML conversions hence that test class needs to be
  * run before this test class; the {@link AllTests} test suite enforces this.
  */
-@RunWith(ParallelizedRunner.class)
+@RunWith(Parameterized.class)
 public class GeneratedPharmmlToNmtranModelsTest extends ConverterATParent {
     private final static String NAME = "GeneratedPharmmlToNmtranModelsTest";
     private final static Logger LOG = Logger.getLogger(GeneratedPharmmlToNmtranModelsTest.class);
