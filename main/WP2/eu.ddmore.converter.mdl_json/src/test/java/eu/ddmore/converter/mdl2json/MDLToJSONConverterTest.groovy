@@ -21,7 +21,6 @@ import eu.ddmore.convertertoolbox.api.response.ConversionReport
 import eu.ddmore.convertertoolbox.api.response.ConversionReport.ConversionCode
 
 
-@Ignore("MDL to JSON conversion is currently not supported")
 public class MDLToJSONConverterTest {
     
     @Rule
@@ -34,11 +33,6 @@ public class MDLToJSONConverterTest {
     
     private MDLToJSONConverter converter
 
-    /**
-     * Set-up tasks prior to each test being run.
-     * <p>
-     * @throws IOException 
-     */
     @Before
     public void setUp() throws IOException {
 
@@ -47,16 +41,12 @@ public class MDLToJSONConverterTest {
         invalidMdlFile = new File(workingFolder.getRoot(), "UseCase1_1.mdl")
         jsonInvalidMdlFile = new File(workingFolder.getRoot(), "UseCase1_1.json")
     
-        FileUtils.copyURLToFile(getClass().getResource("/test-models/MDL/Product4.1_newgrammar/UseCase1.mdl"), validMdlFile)
+        FileUtils.copyURLToFile(getClass().getResource("/test-models/MDL/Product5/UseCase1.mdl"), validMdlFile)
         FileUtils.copyURLToFile(getClass().getResource("/test-models/MDL/Product4-invalid/UseCase1_1.mdl"), invalidMdlFile)
         
         this.converter = new MDLToJSONConverter()
     }
 
-    /**
-     * Test method for {@link MDLToJSONConverter#performConvert(java.io.File, java.io.File)}.
-     * @throws IOException 
-     */
     @Test
     public void testPerformConvertForValidMdlFile() throws IOException {
         assertFalse("Converted JSON file should not initially exist", jsonValidMdlFile.exists())
@@ -65,10 +55,6 @@ public class MDLToJSONConverterTest {
         assertTrue("Converted JSON file should have been created", jsonValidMdlFile.exists())
     }
     
-    /**
-     * Test method for {@link MDLToJSONConverter#performConvert(java.io.File, java.io.File)}.
-     * @throws IOException 
-     */
     @Test
     public void testPerformConvertForInvalidMdlFile() throws IOException {
         assertFalse("Converted JSON file should not initially exist", jsonInvalidMdlFile.exists())
