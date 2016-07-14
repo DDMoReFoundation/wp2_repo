@@ -47,11 +47,11 @@ public class MDLToJSONConverter implements ConverterProvider {
 
         final eu.ddmore.mdl.mdl.Mcl orig = new MdlParser().parse(src, report)
         
-        final eu.ddmore.mdl.mdl.Mcl mcl = expandShorthands(orig)
-        
         if (ConversionCode.FAILURE.equals(report.getReturnCode())) {
             return report // Bail out - couldn't parse the MDL
         }
+        
+        final eu.ddmore.mdl.mdl.Mcl mcl = expandShorthands(orig)
 
         final String json = toJSON(mcl)
         
