@@ -41,7 +41,7 @@ class PropertyBlockStatement extends BlockStatement<String> {
         if(content[PROPERTY_BLOCKATTRS] && content[PROPERTY_BLOCKATTRS].size()>0) {
             sb.append("(")
             //we don't use KeyValuePairConverter here as we don't want the 'is' to substitute '='
-            sb.append(content[PROPERTY_BLOCKATTRS].collect { key, value -> "${key}=${value}"} .join("\n"))
+            sb.append(content[PROPERTY_BLOCKATTRS].collect { key, value -> "${key}=${value}"} .join(","))
             sb.append(")")
         }
         sb.append(" {\n")

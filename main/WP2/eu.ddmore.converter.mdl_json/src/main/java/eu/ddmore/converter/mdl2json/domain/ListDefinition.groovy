@@ -63,6 +63,7 @@ public class ListDefinition extends AbstractStatement {
     public String toMDL() {
         Map<String, String> props = getProperties()
         props.remove(PROPERTY_SUBTYPE)
+        props.remove(PROPERTY_BLOCKATTRS)
         final StringBuffer sb = new StringBuffer()
         sb.append(IDT)
         sb.append(IDT)
