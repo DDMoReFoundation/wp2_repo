@@ -54,6 +54,7 @@
                                     <url>${standalone.nonmem.binary.url}</url>
                                     <fromFile>${standalone.nonmem.installation.archive.name}</fromFile>
                                     <toFile>${target.gen}/${standalone.nonmem.installation.archive.name}</toFile>
+				    <serverId>see_nonmem_plugin_server</serverId>
                                 </configuration>
                             </execution>
                         </executions>
@@ -134,7 +135,7 @@
         <dependency>
              <groupId>eu.ddmore.testdata</groupId>
              <artifactId>test-models</artifactId>
-             <version>0.4.0</version>
+             <version>0.4.1</version>
         </dependency>
         
         
