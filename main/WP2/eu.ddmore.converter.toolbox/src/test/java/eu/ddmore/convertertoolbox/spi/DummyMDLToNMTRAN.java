@@ -58,6 +58,15 @@ public class DummyMDLToNMTRAN implements ConverterProvider {
         return report;
     }
 
+    @Override
+    public ConversionReport performConvertToFile(File src, File tgtFile) {
+        ConversionReport report = new ConversionReportImpl();
+        report.setReturnCode(ConversionCode.SUCCESS);
+        ConversionDetail conversionDetail = createConversionDetail(src);
+        report.addDetail(conversionDetail);
+        return report;
+    }
+
     private ConversionDetail createConversionDetail(File src) {
         ConversionDetail conversionDetail = new ConversionDetailImpl();
         conversionDetail.addInfo("INFO", "What a nice conversion!");

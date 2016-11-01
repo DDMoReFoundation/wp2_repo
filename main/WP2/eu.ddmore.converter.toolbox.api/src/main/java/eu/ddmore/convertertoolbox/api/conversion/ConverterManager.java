@@ -43,7 +43,7 @@ public interface ConverterManager {
 	 * @param source the conversion source language and version
 	 * @param target the conversion target language and version
      * @return a ready to use converter 
-     * @throws if there is no converter registered in the toolbox that can convert from input to output
+     * @throws ConverterNotFoundException if there is no converter registered in the toolbox that can convert from input to output
 	 */
     Converter getConverter(LanguageVersion source, LanguageVersion target) throws ConverterNotFoundException;
 
@@ -53,7 +53,7 @@ public interface ConverterManager {
 	 * @param target the conversion target language and version
      * @param converterVersion the converter version
      * @return a ready to use converter
-     * @throws if there is no converter registered in the toolbox that can convert from input to output and is of the specified version
+     * @throws ConverterNotFoundException if there is no converter registered in the toolbox that can convert from input to output and is of the specified version
      */
     Converter getConverter(LanguageVersion source, LanguageVersion target, Version converterVersion) throws ConverterNotFoundException;
 

@@ -53,8 +53,11 @@ public final class Main {
 
     @Option(name = DASH + "in", handler = StringOptionHandler.class, usage = "Input file or folder path.", required = true)
     String src;
-    @Option(name = DASH + "out", handler = StringOptionHandler.class, usage = "Output folder path.", required = true)
-    String output;
+    @Option(name = DASH + "out", handler = StringOptionHandler.class, usage = "Output folder path.", required = false)
+    String outputDir;
+
+    @Option(name = DASH + "outFile", handler = StringOptionHandler.class, usage = "Output folder path.", required =false)
+    String outputFile;
 
     @Option(name = DASH + "source-language-name", aliases = { DASH + "sn" }, handler = StringOptionHandler.class, usage = "Source Language Name, e.g. 'MDL'.", required = true)
     String sourceLanguageName;
@@ -65,6 +68,7 @@ public final class Main {
     String targetLanguageName;
     @Option(name = DASH + "target-language-version", aliases = { DASH + "tv" }, handler = StringOptionHandler.class, usage = "Target Language Version, e.g '7.2'.", required = true)
     String targetLanguageVersion;
+	private boolean hasErrors = false;
 
     private ConversionReport convert(File src, String srcLanguage, String srcVersion, String targetLanguage, String targetVersion,
             File outputDirectory) throws ConverterNotFoundException, IOException {
@@ -86,6 +90,17 @@ public final class Main {
         for (File inputFile : src) {
             reports[i++] = converter.convert(inputFile, outputDirectory);
         }
+        return reports;
+    }
+
+    private ConversionReport[] convertToFile(File src, String srcLanguage, String srcVersion, String targetLanguage, String targetVersion,
+            File outputFile) throws ConverterNotFoundException, IOException {
+        LanguageVersion source = getLanguageVersion(srcLanguage, srcVersion);
+        LanguageVersion target = getLanguageVersion(targetLanguage, targetVersion);
+
+        Converter converter = converterManager.getConverter(source, target);
+        ConversionReport[] reports = new ConversionReport[1];
+        reports[0] = converter.convertToFile(src, outputFile);
         return reports;
     }
 
@@ -139,14 +154,25 @@ public final class Main {
         converterManager = new ConverterManagerImpl();
         converterManager.discoverConverters();
         File srcAsFile = new File(src);
-        File outputDirectory = new File(output);
         if (srcAsFile.isDirectory()) {
-            File[] filesForConversion = getFilesFromDirectory(srcAsFile);
-            return convert(filesForConversion, sourceLanguageName, sourceLanguageVersion, targetLanguageName, targetLanguageVersion,
-                outputDirectory);
-        } else {
-            return new ConversionReport[] { convert(srcAsFile, sourceLanguageName, sourceLanguageVersion, targetLanguageName,
-                targetLanguageVersion, outputDirectory) };
+        	if(outputFile == null &&outputDir != null){
+	            File outputDirectory = new File(outputDir);
+	            File[] filesForConversion = getFilesFromDirectory(srcAsFile);
+	            return convert(filesForConversion, sourceLanguageName, sourceLanguageVersion, targetLanguageName, targetLanguageVersion,
+	                outputDirectory);
+        	}
+        	else{
+        		throw new RuntimeException("Cannot write multiple input files to the same output file.");
+        	}
+        } else{
+        	if(outputDir != null){
+	            File outputDirectory = new File(outputDir);
+	            return new ConversionReport[] { convert(srcAsFile, sourceLanguageName, sourceLanguageVersion, targetLanguageName,
+	                targetLanguageVersion, outputDirectory) };
+        	}
+	        else {
+	        	return convertToFile(srcAsFile, sourceLanguageName, sourceLanguageVersion, targetLanguageName, targetLanguageVersion, new File(outputFile));
+	        }
         }
     }
 
@@ -165,9 +191,28 @@ public final class Main {
         try {
             parser = new CmdLineParser(this);
             parser.parseArgument(args);
+            // sanity checks
+            if(outputDir != null && outputFile != null){
+            	reportError("Cannot use both a destination directory and file. Choose one or the other.");
+            }
+            if(outputDir == null && outputFile == null){
+            	reportError("Either a destination directory or file must be provided.");
+            }
+            if(src == null){
+            	reportError("A source file or directory must be provided.");
+            }
         } catch (CmdLineException e) {
             exit(parser, e.getMessage());
         }
+    }
+    
+    public boolean hasErrors(){
+    	return hasErrors;
+    }
+    
+    private void reportError(String errMsg){
+    	System.err.println(errMsg);
+    	hasErrors  = true;
     }
 
     private String exposeCappabilities() {
@@ -194,6 +239,9 @@ public final class Main {
     public static void main(String... args) throws ConverterNotFoundException, IOException {
         Main cli = new Main();
         cli.parseArguments(args);
+        if(cli.hasErrors()){
+        	System.exit(1);
+        }
         ConversionReport[] reports = null;
         try {
             reports = cli.runFromCommandLine();

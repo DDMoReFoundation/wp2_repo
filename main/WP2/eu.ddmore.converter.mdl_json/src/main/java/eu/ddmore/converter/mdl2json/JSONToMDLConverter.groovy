@@ -44,6 +44,25 @@ public class JSONToMDLConverter implements ConverterProvider {
     // this should be the same as the development stream version as of this Maven module
     private final Version converterVersion = new VersionImpl(0, 3, 0);
 
+	@Override
+	public ConversionReport performConvertToFile(File src, File tgtFile){
+		JsonSlurper jsonSlurper = new JsonSlurper();
+		Mcl mclFile = new Mcl(jsonSlurper.parseText(src.getText()))
+
+		ConversionReport report = new ConversionReportImpl();
+
+		final String mdl = mclFile.toMDL();
+
+		if (mdl) {
+			outputFile.write(mdl)
+			report.setReturnCode(ConversionCode.SUCCESS);
+			return report
+		} else {
+			throw new RuntimeException("Couldn't parse JSON into MDL from file " + src.getPath())
+		}
+
+	}
+	
     /**
      * Converter Toolbox required entry point.
      */

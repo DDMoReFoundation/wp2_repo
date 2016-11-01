@@ -49,6 +49,32 @@ public class MDLToJSONConverter implements ConverterProvider {
     // this should be the same as the development stream version as of this Maven module
     private final Version converterVersion = new VersionImpl(0, 3, 0);
 
+	
+	@Override
+	public ConversionReport performConvertToFile(File src, File outputFile) throws IOException {
+		// We know we're going to return a conversion report so create it up front; it is added to at various places in this method
+		final ConversionReport report = new ConversionReportImpl()
+
+		final eu.ddmore.mdl.mdl.Mcl orig = new MdlParser().parse(src, report)
+		
+		if (ConversionCode.FAILURE.equals(report.getReturnCode())) {
+			return report // Bail out - couldn't parse the MDL
+		}
+		
+		final eu.ddmore.mdl.mdl.Mcl mcl = expandShorthands(orig)
+
+		final String json = toJSON(mcl)
+		
+		if (json) {
+			outputFile.write(json)
+			report.setReturnCode(ConversionCode.SUCCESS);
+			return report
+		} else {
+			throw new RuntimeException("Couldn't write out JSON from MDL parsed from file " + src.getPath())
+		}
+
+	}
+	
     /**
      * Converter Toolbox required entry point.
      */

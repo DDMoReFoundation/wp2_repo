@@ -16,6 +16,9 @@
 package eu.ddmore.convertertoolbox.cli;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 import java.io.File;
 import java.io.IOException;
@@ -101,7 +104,56 @@ public class MainTest {
         Main cli = new Main();
         cli.parseArguments(args);
         assertEquals(WORKING_DIR, cli.src);
-        assertEquals("files", cli.output);
+        assertEquals("files", cli.outputDir);
+        assertEquals("MDL", cli.sourceLanguageName);
+        assertEquals("5.0.8-qualm", cli.sourceLanguageVersion);
+        assertEquals("NMTRAN", cli.targetLanguageName);
+        assertEquals("7.2.0-qualn", cli.targetLanguageVersion);
+        assertFalse(cli.hasErrors());
+    }
+
+    @Test
+    public void shouldParseArguments2() throws ConverterNotFoundException, IOException {
+        String[] args = new String[] { "-in", WORKING_DIR, "-outFile", "file", "-sn", "MDL", "-sv", "5.0.8-qualm", "-tn", "NMTRAN", "-tv",
+                "7.2.0-qualn" };
+        Main cli = new Main();
+        cli.parseArguments(args);
+        assertEquals(WORKING_DIR, cli.src);
+        assertEquals("file", cli.outputFile);
+        assertNull("dir", cli.outputDir);
+        assertEquals("MDL", cli.sourceLanguageName);
+        assertEquals("5.0.8-qualm", cli.sourceLanguageVersion);
+        assertEquals("NMTRAN", cli.targetLanguageName);
+        assertEquals("7.2.0-qualn", cli.targetLanguageVersion);
+        assertFalse(cli.hasErrors());
+    }
+
+    @Test
+    public void shouldNotParseArgumentsFileAndDirDestn() throws ConverterNotFoundException, IOException {
+        String[] args = new String[] { "-in", WORKING_DIR, "-out", "dir", "-outFile", "file", "-sn", "MDL", "-sv", "5.0.8-qualm", "-tn", "NMTRAN", "-tv",
+                "7.2.0-qualn" };
+        Main cli = new Main();
+        cli.parseArguments(args);
+        assertTrue(cli.hasErrors());
+        assertEquals(WORKING_DIR, cli.src);
+        assertEquals("file", cli.outputFile);
+        assertEquals("dir", cli.outputDir);
+        assertEquals("MDL", cli.sourceLanguageName);
+        assertEquals("5.0.8-qualm", cli.sourceLanguageVersion);
+        assertEquals("NMTRAN", cli.targetLanguageName);
+        assertEquals("7.2.0-qualn", cli.targetLanguageVersion);
+    }
+
+    @Test
+    public void shouldNotParseArgumentsFileAndDirMissing() throws ConverterNotFoundException, IOException {
+        String[] args = new String[] { "-in", WORKING_DIR, "-sn", "MDL", "-sv", "5.0.8-qualm", "-tn", "NMTRAN", "-tv",
+                "7.2.0-qualn" };
+        Main cli = new Main();
+        cli.parseArguments(args);
+        assertTrue(cli.hasErrors());
+        assertEquals(WORKING_DIR, cli.src);
+        assertNull(cli.outputFile);
+        assertNull(cli.outputDir);
         assertEquals("MDL", cli.sourceLanguageName);
         assertEquals("5.0.8-qualm", cli.sourceLanguageVersion);
         assertEquals("NMTRAN", cli.targetLanguageName);

@@ -28,6 +28,15 @@ import eu.ddmore.convertertoolbox.api.response.ConversionReport;
 public interface ConverterProvider {
 
 	/**
+     * Convert the source file and put the specified file. 
+	 * @param src the source file to be converted
+	 * @param tgtFile the file to write output to.
+     * @return a conversion report containing the details of the requested conversion 
+     * @throws IOException if there is some error in file reading/writing
+	 */
+    ConversionReport performConvertToFile(File src, File tgtFile) throws IOException;
+
+    /**
 	 * Converts the source file using the languages and versions associated with this ConverterProvider.
 	 * @param src the source file to be converted
 	 * @param outputDirectory the output directory where the converted file will be stored
