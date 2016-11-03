@@ -74,7 +74,30 @@ public class DummyMDLToNONMEMSuccess implements ConverterProvider {
         return report;
     }
 
-    private ConversionDetail createConversionDetail(Severity severity) {
+
+	@Override
+	public ConversionReport performConvertToFile(File src, File tgtFile) throws IOException {
+        ConversionReport report = new ConversionReportImpl();
+        report.setReturnCode(ConversionCode.SUCCESS);
+        if (src.getName().contains("w")) {
+            report.addDetail(createConversionDetail(Severity.WARNING));
+        }
+        if (src.getName().contains("i")) {
+            report.addDetail(createConversionDetail(Severity.INFO));
+        }
+        if (src.getName().contains("d")) {
+            report.addDetail(createConversionDetail(Severity.DEBUG));
+        }
+        File resultFile = tgtFile;
+        try {
+            FileUtils.writeStringToFile(resultFile, this.toString());
+        } catch (IOException e) {
+            throw new RuntimeException(String.format("could not create result file %s",resultFile.getAbsolutePath()));
+        }
+        return report;
+	}
+
+	private ConversionDetail createConversionDetail(Severity severity) {
         ConversionDetail conversionDetail = new ConversionDetailImpl();
         conversionDetail.setSeverity(severity);
         if (severity.equals(Severity.ERROR)) {
