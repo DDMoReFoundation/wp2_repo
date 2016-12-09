@@ -16,7 +16,6 @@
 package eu.ddmore.converter.mdl2json
 
 import org.apache.log4j.Logger
-import eu.ddmore.mdl.mdl.Mcl
 
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
