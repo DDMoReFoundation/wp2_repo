@@ -37,8 +37,16 @@ public class MDLToPharmMLConverter implements ConverterProvider {
     private LanguageVersion source;
     private LanguageVersion target;
     private Version converterVersion;
+    private final boolean useAbsolutePathsFlag;
 
     public MDLToPharmMLConverter() {
+    	this(false);
+    }
+    
+    
+    public MDLToPharmMLConverter(boolean absPathFlag) {
+    	this.useAbsolutePathsFlag = absPathFlag;
+    	
         Version sourceVersion = new VersionImpl(8, 0, 0);
         source = new LanguageVersionImpl("MDL", sourceVersion);
 
@@ -47,6 +55,10 @@ public class MDLToPharmMLConverter implements ConverterProvider {
 
         // this should be the same as the development stream version as of this Maven module
         converterVersion = new VersionImpl(0, 4, 0);
+    }
+    
+    public boolean isAbsolutePathsEnabled(){
+    	return this.useAbsolutePathsFlag;
     }
 
     @Override
@@ -77,7 +89,7 @@ public class MDLToPharmMLConverter implements ConverterProvider {
             	throw new IllegalStateException("Must be (at least) one MOG defined in the provided MCL file: " + src); 
             }
     
-            final CharSequence converted = new Mdl2Pharmml().convertToPharmML(mog);
+            final CharSequence converted = new Mdl2Pharmml().convertToPharmML(mog, this.useAbsolutePathsFlag);
             
             final File outputFile = new File(outputDirectory.getAbsoluteFile(), FilenameUtils.getBaseName(src.getName()) + ".xml");
             
