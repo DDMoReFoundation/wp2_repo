@@ -89,7 +89,7 @@ public class MDLToPharmMLConverter implements ConverterProvider {
             	throw new IllegalStateException("Must be (at least) one MOG defined in the provided MCL file: " + src); 
             }
     
-            final CharSequence converted = new Mdl2Pharmml().convertToPharmML(mog, this.useAbsolutePathsFlag);
+            final CharSequence converted = new Mdl2Pharmml().convertToPharmML(mog, src.getParent());
             
             final File outputFile = new File(outputDirectory.getAbsoluteFile(), FilenameUtils.getBaseName(src.getName()) + ".xml");
             
