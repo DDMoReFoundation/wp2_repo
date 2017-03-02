@@ -21,6 +21,7 @@ import static eu.ddmore.converter.mdl2json.MdlAndJsonFileUtils.*
 
 import java.io.File
 import java.io.IOException
+import java.net.URL
 
 import org.apache.commons.io.FileUtils
 import org.junit.Before
@@ -75,4 +76,11 @@ public class MDLToJSONConverterTest {
         assertFalse("No converted JSON file should have been created", jsonInvalidMdlFile.exists())
     }
 
+    @Test
+    public void testArrayHandling() throws IOException{
+    	URL mdlFile = getClass().getResource("Magni_2004_diabetes_IVGTT.mdl");
+        final ConversionReport report = converter.performConvert(new File(mdlFile.getFile()), workingFolder.getRoot());
+        assertEquals("Checking for failure return code", ConversionCode.SUCCESS, report.getReturnCode());
+    }
+    
 }

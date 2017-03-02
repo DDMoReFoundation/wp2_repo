@@ -23,8 +23,7 @@ import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.util.EcoreUtil
 
 import com.google.common.base.Preconditions
-
-import eu.ddmore.converter.treerewrite.VectorAttributeRewrite
+import eu.ddmore.converter.mdl2json.utils.VectorAttributeRewrite
 import eu.ddmore.convertertoolbox.api.response.ConversionReport
 import eu.ddmore.convertertoolbox.api.response.ConversionReport.ConversionCode
 import eu.ddmore.convertertoolbox.domain.ConversionReportImpl
