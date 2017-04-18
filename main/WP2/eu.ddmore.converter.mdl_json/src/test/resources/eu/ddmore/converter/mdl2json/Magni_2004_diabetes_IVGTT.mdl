@@ -1,0 +1,214 @@
+# Magni 2004
+# Insulin Minimal Model Indexes and Secretion
+#
+# Limitations:
+# none
+#
+# Compatibility:
+# NONMEM and WinBUGS
+#
+# Dataset:
+# IVGTT experiment, C-Peptide measurements
+#
+# By Elisa Borella, Letizia Carrara, Silvia Lavezzi, Paolo Magni, Giulia Muzio, Lorenzo Pasotti, Elena Tosca
+# BMS lab - Univ Pavia
+#
+
+magni2004_data = dataObj{
+
+	DECLARED_VARIABLES{Y::observation}
+
+	DATA_INPUT_VARIABLES{
+		ID: {use is id}
+		TIME: {use is idv} #min
+		DV: {use is dv, variable= Y} 
+		GLUC: {use is covariate} #pmol/L
+		EVID: {use is evid}
+	}
+	
+	SOURCE{
+	srcfile: {file = "magni2004_data_ORIGINAL.csv",
+	     	  inputFormat is nonmemFormat
+		      }
+	}
+}
+
+magni2004_pri = priorObj{
+	
+	PRIOR_PARAMETERS{
+	
+		GB = 89 # it has to be changed via TEL according to the measured values
+
+		MU_POP_m = 0.5
+      	MU_POP_alpha = 0.06
+      	MU_POP_beta = 11
+      	MU_POP_x0 = 1.8
+      	MU_POP_h = GB
+      	
+      	# standard deviations
+     	SIGMA_POP_m = 0.5
+      	SIGMA_POP_alpha = 0.06
+      	SIGMA_POP_beta = 11
+   		SIGMA_POP_x0 = 1.8
+	    SIGMA_POP_h = GB*0.03
+	}
+	
+	NON_CANONICAL_DISTRIBUTION{
+		PRIOR_SOURCE{
+			data1 : { file="prior_magni2004.csv", inputFormat is csv,
+						column=["data_k01", "data_k12", "data_k21"]}
+		}
+
+		INPUT_PRIOR_DATA{
+			:: {matrixVar = data_k_joint, src=data1, column=["data_k01", "data_k12", "data_k21"]}
+		}
+	}
+	
+	PRIOR_VARIABLE_DEFINITION{
+	  data_k_joint :: matrix
+	  POP_joint ~ MultiEmpirical(data=data_k_joint)
+
+	  POP_K01 = POP_joint[1]
+	  POP_K12 = POP_joint[2]
+	  POP_K21 = POP_joint[3]
+	  
+	  POP_m ~ Normal(mean=MU_POP_m, sd=SIGMA_POP_m)
+	  POP_alpha ~ Normal(mean=MU_POP_alpha, sd=SIGMA_POP_alpha)
+	  POP_beta ~ Normal(mean=MU_POP_beta, sd=SIGMA_POP_beta)
+	  POP_x0 ~ Normal(mean=MU_POP_x0, sd=SIGMA_POP_x0)
+	  POP_h ~ Normal(mean=MU_POP_h, sd=SIGMA_POP_h)
+	  
+	  CV=0.06
+	}
+}
+
+magni2004_par = parObj{
+	STRUCTURAL{
+	#CP kinetic model parameters (fixed)
+		POP_K01: {value=0.0618, fix=true} #1/min
+		POP_K12: {value=0.0492, fix=true} #1/min
+		POP_K21: {value=0.0479, fix=true} #1/min
+	#ISR model parameters
+		POP_m: {lo=0, value=0.6} #1/min
+		POP_alpha: {lo=0, value=0.06}  #1/min
+		POP_beta: {lo=0, value=11}  #1/min 
+		POP_x0: {lo=0, value=1.8} #pmol/L 
+		POP_h: {value=89, fix=true} #pmol/L
+	}
+	VARIABILITY{
+	#Model error parameters
+		CV: {value=0.06, fix=true}
+	}
+}
+
+magni2004_mdl = mdlObj{
+
+	IDV {T}
+	
+	COVARIATES{
+			GLUC
+	}
+	
+	STRUCTURAL_PARAMETERS{
+			POP_K01
+			POP_K12
+			POP_K21
+			POP_m
+			POP_alpha
+			POP_beta
+			POP_x0
+			POP_h
+	}
+	
+	VARIABILITY_PARAMETERS{
+			CV
+	}
+
+	INDIVIDUAL_VARIABLES{
+			K01 = POP_K01
+			K12 = POP_K12
+			K21 = POP_K21
+			m = POP_m
+			alpha = POP_alpha
+			beta = POP_beta
+			x0 = POP_x0
+			h = POP_h
+			
+			x0new=x0*1000
+	}
+	
+	MODEL_PREDICTION{
+		
+		DEQ{
+			ISR = if (GLUC>h) then m*X
+			      else 0;
+
+     		dYi = if (GLUC>h) then -alpha*(Yi-beta*(GLUC-h)*(0.05551)) #conversion with glucose is h (mg/dl) /18.01*1e9 (pmol/l)
+     		
+     		      else -alpha*Yi;
+     		      	
+            #CP kinetics
+            CP1: {deriv=-(K01+K21)*CP1+K12*CP2+ISR, init=0, x0=0}
+            CP2: {deriv=-K12*CP2+K21*CP1, init=0, x0=0}
+
+            #ISR model
+            X: {deriv=-ISR+Yi, init=(x0new), x0=0}
+            Yi: {deriv=dYi, init=0, x0=0}
+            	}
+            	
+         }
+		        
+     VARIABILITY_LEVELS{
+		DV: {level=1, type is observation} 
+	   	ID: {level=2, type is parameter}
+     }
+     
+     RANDOM_VARIABLE_DEFINITION(level=DV){
+		eps_RES_CP1 ~ Normal(mean=0, var=1)
+     }
+
+     OBSERVATION{
+     #combined error model with small additive parameter to avoid problems in estimation
+		Y : { type is combinedError1, additive=0.0001, proportional = CV, eps = eps_RES_CP1, prediction = CP1 }
+	}
+}
+
+
+magni2004_NONMEM_task = taskObj{
+	ESTIMATE{
+		set algo is foce
+	}
+}
+
+
+magni2004_BUGS_task = taskObj{
+	ESTIMATE{
+		set algo is mcmc
+        TARGET_SETTINGS(target="BUGS"){
+            set 
+            nchains = 1,
+            burnin = 1000,
+            niter = 5000,
+            odesolver="LSODA",
+        	winbugsgui="false"
+        }
+	}
+}
+
+mymog_NONMEM = mogObj{
+	OBJECTS{
+		magni2004_data : { type is dataObj }
+		magni2004_pri : {type is priorObj}
+	    magni2004_mdl : { type is mdlObj }
+	    magni2004_NONMEM_task : { type is taskObj }
+	}
+}
+
+#mymog_BUGS = mogObj{
+#	OBJECTS{
+#		magni2004_data : { type is dataObj }
+#		magni2004_pri : {type is priorObj}
+#	    magni2004_mdl : { type is mdlObj }
+#	    magni2004_BUGS_task : { type is taskObj }
+#	}
+#}

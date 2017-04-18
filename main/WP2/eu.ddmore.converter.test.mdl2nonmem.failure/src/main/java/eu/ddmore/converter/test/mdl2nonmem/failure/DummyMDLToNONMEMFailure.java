@@ -71,7 +71,29 @@ public class DummyMDLToNONMEMFailure implements ConverterProvider {
         return report;
     }
 
-    private ConversionDetail createConversionDetail(Severity severity) {
+
+	@Override
+	public ConversionReport performConvertToFile(File src, File tgtFile) throws IOException {
+        if (src.getName().equals("exception")) {
+            throw new IOException("DummyMDLToNMTRANFailure");
+        }
+
+        ConversionReport report = new ConversionReportImpl();
+        report.setReturnCode(ConversionCode.FAILURE);
+        report.addDetail(createConversionDetail(Severity.ERROR));
+        if (src.getName().contains("w")) {
+            report.addDetail(createConversionDetail(Severity.WARNING));
+        }
+        if (src.getName().contains("i")) {
+            report.addDetail(createConversionDetail(Severity.INFO));
+        }
+        if (src.getName().contains("d")) {
+            report.addDetail(createConversionDetail(Severity.DEBUG));
+        }
+        return report;
+	}
+
+	private ConversionDetail createConversionDetail(Severity severity) {
         ConversionDetail conversionDetail = new ConversionDetailImpl();
         conversionDetail.setSeverity(severity);
         if (severity.equals(Severity.ERROR)) {

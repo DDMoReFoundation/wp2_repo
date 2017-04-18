@@ -64,6 +64,11 @@ public class ConverterImpl implements Converter {
     }
 
     @Override
+    public ConversionReport convertToFile(File src, File tgtFile) throws IOException {
+        return provider.performConvertToFile(src, tgtFile);
+    }
+
+    @Override
     public ConversionReport convert(File src, File outputDirectory) throws IOException {
         return provider.performConvert(src, outputDirectory);
     }

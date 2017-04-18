@@ -105,6 +105,47 @@ public class MDLToPharmMLConverter implements ConverterProvider {
         return report;
     }
 
+    public ConversionReport performConvertToFile(File src, File outputFile) throws IOException {
+        // We know we're going to return a conversion report so create it up front; it is added to at various places in this method
+        final ConversionReport report = new ConversionReportImpl();
+        
+        new eu.ddmore.mdllib.MdlLibStandaloneSetup().createInjectorAndDoEMFRegistration();
+        final Injector injector = new MdlStandaloneSetup().createInjectorAndDoEMFRegistration();
+        final XtextResourceSet resourceSet = injector.getInstance(XtextResourceSet.class);
+        resourceSet.addLoadOption(XtextResource.OPTION_RESOLVE_ALL, Boolean.TRUE);
+        registerURIMappingsForImplicitImports(resourceSet);
+        
+        final MDLValidator validator = injector.getInstance(MDLValidator.class);
+
+        final Resource resource = resourceSet.getResource(URI.createURI("file:///" + src.getAbsolutePath()), true);
+        
+        if (validator.validate(resource, report)) {
+        
+            MogDefinitionProvider utils = new MogDefinitionProvider();
+            Mcl mcl = (Mcl) resource.getContents().get(0);
+            MclObject mog = utils.getFirstMogObj(mcl);
+    
+            // TODO: We're currently making an assumption that there will be a single MOG
+            // in the provided file.  This should be fine for Product 4.
+            // This will be addressed under DDMORE-1221
+            if (mog==null) {
+            	throw new IllegalStateException("Must be (at least) one MOG defined in the provided MCL file: " + src); 
+            }
+    
+            final CharSequence converted = new Mdl2Pharmml().convertToPharmML(mog);
+            
+            try {
+                FileUtils.writeStringToFile(outputFile, converted.toString());
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+            
+            report.setReturnCode(ConversionCode.SUCCESS);
+        }
+        
+        return report;
+    }
+
     public ConversionReport[] performConvert(File[] src, File outputDirectory) throws IOException {
         ConversionReport[] reports = new ConversionReport[src.length];
         int i = 0;

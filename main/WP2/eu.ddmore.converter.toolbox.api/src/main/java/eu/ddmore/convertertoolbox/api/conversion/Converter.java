@@ -31,6 +31,15 @@ public interface Converter {
 	/**
      * Convert the source file and put the output file(s) in the output directory. 
 	 * @param src the source file to be converted
+	 * @param tgtFile the file to write output to.
+     * @return a conversion report containing the details of the requested conversion 
+     * @throws IOException if there is some error in file reading/writing
+	 */
+    ConversionReport convertToFile(File src, File tgtFile) throws IOException;
+
+    /**
+     * Convert the source file and put the output file(s) in the output directory. 
+	 * @param src the source file to be converted
 	 * @param outputDirectory the output directory where the converted file will be stored
      * @return a conversion report containing the details of the requested conversion 
      * @throws IOException if there is some error in file reading/writing

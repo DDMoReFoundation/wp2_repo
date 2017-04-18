@@ -34,6 +34,11 @@ public class DummyMDLToNMTRANFailure implements ConverterProvider {
     private Version converterVersion;
 
     @Override
+    public ConversionReport performConvertToFile(File src, File tgtFile) throws IOException {
+        throw new IOException("DummyMDLToNMTRANFailure");
+    }
+
+    @Override
     public ConversionReport performConvert(File src, File outputDirectory) throws IOException {
         throw new IOException("DummyMDLToNMTRANFailure");
     }

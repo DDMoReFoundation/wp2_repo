@@ -16,6 +16,7 @@
 package eu.ddmore.converter.test.mdl2pharmml;
 
 import java.io.File;
+import java.io.IOException;
 
 import eu.ddmore.convertertoolbox.api.domain.LanguageVersion;
 import eu.ddmore.convertertoolbox.api.domain.Version;
@@ -52,6 +53,13 @@ public class DummyMDLToPharmML implements ConverterProvider {
         report.setReturnCode(ConversionCode.SUCCESS);
         return report;
     }
+
+	@Override
+	public ConversionReport performConvertToFile(File src, File tgtFile) throws IOException {
+        ConversionReport report = new ConversionReportImpl();
+        report.setReturnCode(ConversionCode.SUCCESS);
+        return report;
+	}
 
     @Override
     public LanguageVersion getSource() {
