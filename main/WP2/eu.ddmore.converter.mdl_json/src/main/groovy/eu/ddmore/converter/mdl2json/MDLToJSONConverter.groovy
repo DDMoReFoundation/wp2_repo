@@ -122,7 +122,7 @@ public class MDLToJSONConverter implements ConverterProvider {
         String ret = null
         Mcl f = new Mcl(mcl)
         jb f
-        ret = jb.toString()
+        ret = jb.toPrettyString()
 
         return ret;
     }

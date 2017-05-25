@@ -23,6 +23,8 @@
 
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+	   <maven.compiler.source>1.7</maven.compiler.source>
+	   <maven.compiler.target>1.7</maven.compiler.target>
 	</properties>
 
 	<dependencies>
@@ -135,33 +137,31 @@
 			<plugins>
 				<plugin>
 					<artifactId>maven-compiler-plugin</artifactId>
-					<version>3.1</version>
-					<configuration>
-						<source>${java.version}</source>
-						<target>${java.version}</target>
-					</configuration>
+					<version>3.6.1</version>
+				</plugin>
+				<plugin>
+					<groupId>org.codehaus.mojo</groupId>
+        			<artifactId>build-helper-maven-plugin</artifactId>
+        			<version>3.0.0</version>
 				</plugin>
 				<plugin>
 					<groupId>org.codehaus.sonar</groupId>
 					<artifactId>sonar-maven-plugin</artifactId>
 					<version>4.2</version>
 				</plugin>
+				<plugin>
+				  <groupId>org.apache.maven.plugins</groupId>
+				  <artifactId>maven-clean-plugin</artifactId>
+				  <version>3.0.0</version>
+				</plugin>
+	            <plugin>
+	                <groupId>org.apache.maven.plugins</groupId>
+	                <artifactId>maven-surefire-report-plugin</artifactId>
+	                <version>2.19.1</version>
+	            </plugin>
 			</plugins>
 		</pluginManagement>
 	</build>
-
-	<repositories>
-		<!-- Note that this repository definition (and indeed the Mango one above) 
-			won't be used internally at Mango since the Maven settings.xml specifies 
-			that our Artifactory server is the universal mirror for all artifacts; but 
-			if this project is built by someone external to Mango then this would kick 
-			in. -->
-		<repository>
-			<id>ebi</id>
-			<name>European Bioinformatics Institute</name>
-			<url>http://www.ebi.ac.uk/~maven/m2repo</url>
-		</repository>
-	</repositories>
 
 	<url>http://ddmore.eu</url>
 	<description>This is a parent module for converters. This modules ensures that converters extending this use the common versions of dependencies</description>

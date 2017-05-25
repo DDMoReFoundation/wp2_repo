@@ -18,7 +18,7 @@ package eu.ddmore.converter.mdl2json.domain
 import eu.ddmore.converter.mdl2json.utils.KeyValuePairConverter;
 import eu.ddmore.mdl.mdl.FuncArguments
 import eu.ddmore.mdl.mdl.NamedFuncArguments;
-import eu.ddmore.mdl.utils.MdlExpressionConverter
+import eu.ddmore.converter.mdl2json.utils.MdlExpressionConverter
 
 /**
  * Represents {@link eu.ddmore.mdl.mdl.EquationDefinition}, a subclass of {@link eu.ddmore.mdl.mdl.Statement},

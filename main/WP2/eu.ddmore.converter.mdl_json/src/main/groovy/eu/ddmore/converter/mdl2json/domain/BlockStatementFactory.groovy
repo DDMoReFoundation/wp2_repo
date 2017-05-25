@@ -15,18 +15,20 @@
  *******************************************************************************/
 package eu.ddmore.converter.mdl2json.domain
 
+import org.apache.log4j.Logger
+
 import com.google.common.base.Preconditions
 
 import eu.ddmore.converter.mdl2json.domain.BlockStatement.EBlockStatementType
+import eu.ddmore.converter.mdl2json.utils.MdlExpressionConverter
 import eu.ddmore.mdl.mdl.ValuePair
-import eu.ddmore.mdl.utils.MdlExpressionConverter
 
 
 /**
  * Creates instances of subclasses of {@link BlockStatement}.
  */
 public class BlockStatementFactory {
-
+	
     public static BlockStatement fromMDL(final eu.ddmore.mdl.mdl.BlockStatement blkStatement) {
         final String blockName = blkStatement.getBlkId().getName()
         final eu.ddmore.mdl.mdl.BlockBody blkBody = blkStatement.getBody()
@@ -89,8 +91,8 @@ public class BlockStatementFactory {
     private static EBlockStatementType getRepresentationType(final String blockName) {
         switch (blockName) {
             case "IDV":
-            case "STRUCTURAL_PARAMETERS":
-            case "VARIABILITY_PARAMETERS":
+//            case "STRUCTURAL_PARAMETERS":
+//            case "VARIABILITY_PARAMETERS":
                 return EBlockStatementType.SYMBOL_NAMES
             case "ESTIMATE":
             case "SIMULATE":

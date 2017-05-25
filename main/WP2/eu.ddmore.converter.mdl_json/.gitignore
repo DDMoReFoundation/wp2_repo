@@ -3,3 +3,4 @@
 # project to be included under source control
 #!.classpath
 #!.project
+src/main/generated-sources

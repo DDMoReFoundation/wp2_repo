@@ -7,7 +7,10 @@
             <param name="ConversionPattern" value="%-5p | %d{MM-dd-yyyy HH:mm:ss.SSS} | %t | %c(%L) - %m%n"/>
         </layout>
     </appender>
-  <logger name="eu.ddmore">
+    <logger name="org.eclipse">
+        <level value="INFO"/> 
+    </logger>
+    <logger name="eu.ddmore">
     <level value="DEBUG"/> 
   </logger>
   <root>

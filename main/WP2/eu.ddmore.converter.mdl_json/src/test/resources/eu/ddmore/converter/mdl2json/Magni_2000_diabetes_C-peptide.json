@@ -1,0 +1,1164 @@
+[
+    {
+        "name": "magni2000_data",
+        "blocks": {
+            "SOURCE": [
+                {
+                    "srcfile": {
+                        "file": "\"data_van_cauter.csv\"",
+                        "inputFormat": "nonmemFormat"
+                    }
+                }
+            ],
+            "DATA_INPUT_VARIABLES": [
+                {
+                    "ID": {
+                        "use": "id"
+                    }
+                },
+                {
+                    "TIME": {
+                        "use": "idv"
+                    }
+                },
+                {
+                    "DV": {
+                        "use": "dv",
+                        "define": "{1 in DVID as Y1, 2 in DVID as Y2, 3 in DVID as Y3, 4 in DVID as Y4}"
+                    }
+                },
+                {
+                    "DVID": {
+                        "use": "dvid"
+                    }
+                },
+                {
+                    "HSTATUS": {
+                        "use": "covariate"
+                    }
+                },
+                {
+                    "FEMALE": {
+                        "use": "covariate"
+                    }
+                },
+                {
+                    "AGE": {
+                        "use": "covariate"
+                    }
+                },
+                {
+                    "HEIGHT": {
+                        "use": "covariate"
+                    }
+                },
+                {
+                    "WEIGHT": {
+                        "use": "covariate"
+                    }
+                },
+                {
+                    "BMI_DATASET": {
+                        "use": "ignore"
+                    }
+                },
+                {
+                    "BSA_DATASET": {
+                        "use": "ignore"
+                    }
+                }
+            ],
+            "DECLARED_VARIABLES": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "Y1",
+                    "typeSpec": "observation"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "Y2",
+                    "typeSpec": "observation"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "Y3",
+                    "typeSpec": "observation"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "Y4",
+                    "typeSpec": "observation"
+                }
+            ]
+        },
+        "type": "dataObj"
+    },
+    {
+        "name": "magni2000_par",
+        "blocks": {
+            "VARIABILITY": [
+                {
+                    "ADD1": {
+                        "value": "1",
+                        "lo": "0"
+                    }
+                },
+                {
+                    "ADD2": {
+                        "value": "0.01",
+                        "lo": "0"
+                    }
+                },
+                {
+                    "ADD3": {
+                        "value": "6",
+                        "lo": "0"
+                    }
+                },
+                {
+                    "ADD4": {
+                        "value": "1",
+                        "lo": "0"
+                    }
+                }
+            ],
+            "STRUCTURAL": [
+                {
+                    "mtsn": {
+                        "value": "5"
+                    }
+                },
+                {
+                    "mtso": {
+                        "value": "5"
+                    }
+                },
+                {
+                    "mtsd": {
+                        "value": "5"
+                    }
+                },
+                {
+                    "mFn": {
+                        "value": "1"
+                    }
+                },
+                {
+                    "mFo": {
+                        "value": "1"
+                    }
+                },
+                {
+                    "mFd": {
+                        "value": "1"
+                    }
+                },
+                {
+                    "atl": {
+                        "value": "30"
+                    }
+                },
+                {
+                    "btl": {
+                        "value": "1"
+                    }
+                },
+                {
+                    "aVm": {
+                        "value": "1"
+                    }
+                },
+                {
+                    "bVm": {
+                        "value": "1"
+                    }
+                },
+                {
+                    "aVf": {
+                        "value": "1"
+                    }
+                },
+                {
+                    "bVf": {
+                        "value": "1"
+                    }
+                }
+            ]
+        },
+        "type": "parObj"
+    },
+    {
+        "name": "magni2000_pri",
+        "blocks": {
+            "PRIOR_VARIABLE_DEFINITION": [
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "mtsn",
+                    "distn": "Normal(mean=MU_mtsn, var=VAR_mtsn)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "mtso",
+                    "distn": "Normal(mean=MU_mtso, var=VAR_mtso)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "mtsd",
+                    "distn": "Normal(mean=MU_mtsd, var=VAR_mtsd)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "mFn",
+                    "distn": "Normal(mean=MU_mFn, var=VAR_mFn)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "mFo",
+                    "distn": "Normal(mean=MU_mFo, var=VAR_mFo)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "mFd",
+                    "distn": "Normal(mean=MU_mFd, var=VAR_mFd)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "atl",
+                    "distn": "Normal(mean=MU_atl, var=VAR_atl)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "btl",
+                    "distn": "Normal(mean=MU_btl, var=VAR_btl)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "aVm",
+                    "distn": "Normal(mean=MU_aVm, var=VAR_aVm)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "bVm",
+                    "distn": "Normal(mean=MU_bVm, var=VAR_bVm)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "aVf",
+                    "distn": "Normal(mean=MU_aVf, var=VAR_aVf)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "bVf",
+                    "distn": "Normal(mean=MU_bVf, var=VAR_bVf)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "invOMEGA_PAR",
+                    "distn": "Wishart1(scaleMatrix=R, degreesOfFreedom=rho)"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MATRIX_1",
+                    "expr": "inverse(invOMEGA_PAR)"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "ADD_SMALL",
+                    "expr": "1.0E-20"
+                }
+            ],
+            "PRIOR_PARAMETERS": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_mtsn",
+                    "expr": "5"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_mtso",
+                    "expr": "5"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_mtsd",
+                    "expr": "5"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_mFn",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_mFo",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_mFd",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_atl",
+                    "expr": "30"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_btl",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_aVm",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_bVm",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_aVf",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MU_bVf",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_mtsn",
+                    "expr": "5^2"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_mtso",
+                    "expr": "5^2"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_mtsd",
+                    "expr": "5^2"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_mFn",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_mFo",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_mFd",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_atl",
+                    "expr": "30^2"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_btl",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_aVm",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_bVm",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_aVf",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_bVf",
+                    "expr": "1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "R",
+                    "expr": "inverse([[0.5,0,0,0;0,0.1,0,0;0,0,3,0;0,0,0,0.4]])"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "rho",
+                    "expr": "10"
+                }
+            ]
+        },
+        "type": "priorObj"
+    },
+    {
+        "name": "magni2000_pri_sim",
+        "blocks": {
+            "NON_CANONICAL_DISTRIBUTION": [
+                {
+                    ".subtype": "BlockStmt",
+                    "INPUT_PRIOR_DATA": [
+                        {
+                            "": {
+                                "matrixVar": "data_par_joint",
+                                "src": "data1",
+                                "column": [
+                                    "\"data_mtsn\"",
+                                    "\"data_mtso\"",
+                                    "\"data_mtsd\"",
+                                    "\"data_mFn\"",
+                                    "\"data_mFo\"",
+                                    "\"data_mFd\"",
+                                    "\"data_atl\"",
+                                    "\"data_btl\"",
+                                    "\"data_aVm\"",
+                                    "\"data_bVm\"",
+                                    "\"data_aVf\"",
+                                    "\"data_bVf\"",
+                                    "\"data_VAR_ts\"",
+                                    "\"data_VAR_F\"",
+                                    "\"data_VAR_tl\"",
+                                    "\"data_VAR_V\"",
+                                    "\"data_COV_ts_F\"",
+                                    "\"data_COV_ts_tl\"",
+                                    "\"data_COV_F_tl\"",
+                                    "\"data_COV_tl_V\""
+                                ]
+                            }
+                        }
+                    ]
+                },
+                {
+                    "PRIOR_SOURCE": [
+                        {
+                            "data1": {
+                                "file": "\"prior_magni2000.csv\"",
+                                "inputFormat": "csv",
+                                "column": [
+                                    "\"data_mtsn\"",
+                                    "\"data_mtso\"",
+                                    "\"data_mtsd\"",
+                                    "\"data_mFn\"",
+                                    "\"data_mFo\"",
+                                    "\"data_mFd\"",
+                                    "\"data_atl\"",
+                                    "\"data_btl\"",
+                                    "\"data_aVm\"",
+                                    "\"data_bVm\"",
+                                    "\"data_aVf\"",
+                                    "\"data_bVf\"",
+                                    "\"data_VAR_ts\"",
+                                    "\"data_VAR_F\"",
+                                    "\"data_VAR_tl\"",
+                                    "\"data_VAR_V\"",
+                                    "\"data_COV_ts_F\"",
+                                    "\"data_COV_ts_tl\"",
+                                    "\"data_COV_F_tl\"",
+                                    "\"data_COV_ts_V\"",
+                                    "\"data_COV_F_V\"",
+                                    "\"data_COV_tl_V\""
+                                ]
+                            }
+                        }
+                    ],
+                    ".subtype": "BlockStmt"
+                }
+            ],
+            "PRIOR_VARIABLE_DEFINITION": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "data_par_joint",
+                    "typeSpec": "matrix"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "name": "par_joint",
+                    "distn": "MultiEmpirical(data=data_par_joint)"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mtsn",
+                    "expr": "par_joint[1]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mtso",
+                    "expr": "par_joint[2]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mtsd",
+                    "expr": "par_joint[3]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mFn",
+                    "expr": "par_joint[4]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mFo",
+                    "expr": "par_joint[5]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mFd",
+                    "expr": "par_joint[6]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "atl",
+                    "expr": "par_joint[7]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "btl",
+                    "expr": "par_joint[8]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "aVm",
+                    "expr": "par_joint[9]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "bVm",
+                    "expr": "par_joint[10]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "aVf",
+                    "expr": "par_joint[11]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "bVf",
+                    "expr": "par_joint[12]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_ts",
+                    "expr": "par_joint[13]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_F",
+                    "expr": "par_joint[14]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_tl",
+                    "expr": "par_joint[15]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "VAR_V",
+                    "expr": "par_joint[16]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "COV_ts_F",
+                    "expr": "par_joint[17]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "COV_ts_tl",
+                    "expr": "par_joint[18]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "COV_F_tl",
+                    "expr": "par_joint[19]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "COV_ts_V",
+                    "expr": "par_joint[20]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "COV_F_V",
+                    "expr": "par_joint[21]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "COV_tl_V",
+                    "expr": "par_joint[22]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "MATRIX_1",
+                    "expr": "[[VAR_ts,COV_ts_F,COV_ts_tl,COV_ts_V;COV_ts_F,VAR_F,COV_F_tl,COV_F_V;COV_ts_tl,COV_F_tl,VAR_tl,COV_tl_V;COV_ts_V,COV_F_V,COV_tl_V,VAR_V]]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "invOMEGA_PAR",
+                    "expr": "inverse(MATRIX_1)"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "ADD_SMALL",
+                    "expr": "1.0E-20"
+                }
+            ]
+        },
+        "type": "priorObj"
+    },
+    {
+        "name": "magni2000_M0_mdl",
+        "blocks": {
+            "OBSERVATION": [
+                {
+                    "Y1": {
+                        "type": "additiveError",
+                        "additive": "ADD1",
+                        "eps": "EPS1",
+                        "prediction": "ts_PRED"
+                    }
+                },
+                {
+                    "Y2": {
+                        "type": "additiveError",
+                        "additive": "ADD2",
+                        "eps": "EPS2",
+                        "prediction": "F_PRED"
+                    }
+                },
+                {
+                    "Y3": {
+                        "type": "additiveError",
+                        "additive": "ADD3",
+                        "eps": "EPS3",
+                        "prediction": "tl_PRED"
+                    }
+                },
+                {
+                    "Y4": {
+                        "type": "additiveError",
+                        "additive": "ADD4",
+                        "eps": "EPS4",
+                        "prediction": "V_PRED"
+                    }
+                }
+            ],
+            "VARIABILITY_PARAMETERS": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "ADD1"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "ADD2"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "ADD3"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "ADD4"
+                }
+            ],
+            "VARIABILITY_LEVELS": [
+                {
+                    "DV": {
+                        "level": "1",
+                        "type": "observation"
+                    }
+                }
+            ],
+            "STRUCTURAL_PARAMETERS": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mtsn"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mtso"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mtsd"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mFn"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mFo"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mFd"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "atl"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "btl"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "aVm"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "bVm"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "aVf"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "bVf"
+                }
+            ],
+            "COVARIATES": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "HSTATUS"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "FEMALE"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "AGE"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "WEIGHT"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "HEIGHT"
+                }
+            ],
+            "IDV": [
+                "T"
+            ],
+            "RANDOM_VARIABLE_DEFINITION": [
+                {
+                    ".subtype": "RandVarDefn",
+                    "blkAttrs": {
+                        "level": "DV"
+                    },
+                    "name": "EPS1",
+                    "distn": "Normal(mean=0, var=1)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "blkAttrs": {
+                        "level": "DV"
+                    },
+                    "name": "EPS2",
+                    "distn": "Normal(mean=0, var=1)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "blkAttrs": {
+                        "level": "DV"
+                    },
+                    "name": "EPS3",
+                    "distn": "Normal(mean=0, var=1)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "blkAttrs": {
+                        "level": "DV"
+                    },
+                    "name": "EPS4",
+                    "distn": "Normal(mean=0, var=1)"
+                }
+            ],
+            "GROUP_VARIABLES": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "BSA",
+                    "expr": "(WEIGHT^0.425)*(HEIGHT^0.725)*0.20247"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "GROUP_tl",
+                    "expr": "atl+btl*AGE"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "GROUP_ts",
+                    "expr": "if (HSTATUS==0) then mtsn elseif (HSTATUS==1) then mtso elseif (HSTATUS==2) then mtsd"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "GROUP_F",
+                    "expr": "if (HSTATUS==0) then mFn elseif (HSTATUS==1) then mFo elseif (HSTATUS==2) then mFd"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "GROUP_V",
+                    "expr": "if (FEMALE==0) then aVm+bVm*BSA else aVf+bVf*BSA"
+                }
+            ],
+            "MODEL_PREDICTION": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "ts_PRED",
+                    "expr": "GROUP_ts"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "F_PRED",
+                    "expr": "GROUP_F"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "tl_PRED",
+                    "expr": "GROUP_tl"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "V_PRED",
+                    "expr": "GROUP_V"
+                }
+            ]
+        },
+        "type": "mdlObj"
+    },
+    {
+        "name": "magni2000_M4_mdl",
+        "blocks": {
+            "OBSERVATION": [
+                {
+                    "Y1": {
+                        "type": "additiveError",
+                        "additive": "ADD_SMALL",
+                        "eps": "EPS",
+                        "prediction": "ts_PRED"
+                    }
+                },
+                {
+                    "Y2": {
+                        "type": "additiveError",
+                        "additive": "ADD_SMALL",
+                        "eps": "EPS",
+                        "prediction": "F_PRED"
+                    }
+                },
+                {
+                    "Y3": {
+                        "type": "additiveError",
+                        "additive": "ADD_SMALL",
+                        "eps": "EPS",
+                        "prediction": "tl_PRED"
+                    }
+                },
+                {
+                    "Y4": {
+                        "type": "additiveError",
+                        "additive": "ADD_SMALL",
+                        "eps": "EPS",
+                        "prediction": "V_PRED"
+                    }
+                }
+            ],
+            "VARIABILITY_PARAMETERS": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "ADD_SMALL"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "invOMEGA_PAR",
+                    "typeSpec": "matrix"
+                }
+            ],
+            "VARIABILITY_LEVELS": [
+                {
+                    "DV": {
+                        "level": "1",
+                        "type": "observation"
+                    }
+                },
+                {
+                    "ID": {
+                        "level": "2",
+                        "type": "parameter"
+                    }
+                }
+            ],
+            "STRUCTURAL_PARAMETERS": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mtsn"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mtso"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mtsd"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mFn"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mFo"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "mFd"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "atl"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "btl"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "aVm"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "bVm"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "aVf"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "bVf"
+                }
+            ],
+            "COVARIATES": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "HSTATUS"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "FEMALE"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "AGE"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "WEIGHT"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "HEIGHT"
+                }
+            ],
+            "IDV": [
+                "T"
+            ],
+            "RANDOM_VARIABLE_DEFINITION": [
+                {
+                    ".subtype": "RandVarDefn",
+                    "blkAttrs": {
+                        "level": "DV"
+                    },
+                    "name": "EPS",
+                    "distn": "Normal(mean=0, var=1)"
+                },
+                {
+                    ".subtype": "RandVarDefn",
+                    "blkAttrs": {
+                        "level": "ID"
+                    },
+                    "name": "eta_4",
+                    "distn": "MultivariateNormal2(mean=[0,0,0,0], precisionMatrix=invOMEGA_PAR)"
+                }
+            ],
+            "GROUP_VARIABLES": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "BSA",
+                    "expr": "(WEIGHT^0.425)*(HEIGHT^0.725)*0.20247"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "GROUP_tl",
+                    "expr": "atl+btl*AGE"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "GROUP_ts",
+                    "expr": "if (HSTATUS==0) then mtsn elseif (HSTATUS==1) then mtso elseif (HSTATUS==2) then mtsd"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "GROUP_F",
+                    "expr": "if (HSTATUS==0) then mFn elseif (HSTATUS==1) then mFo elseif (HSTATUS==2) then mFd"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "GROUP_V",
+                    "expr": "if (FEMALE==0) then aVm+bVm*BSA else aVf+bVf*BSA"
+                }
+            ],
+            "MODEL_PREDICTION": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "ts_PRED",
+                    "expr": "ts_IND"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "F_PRED",
+                    "expr": "F_IND"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "tl_PRED",
+                    "expr": "tl_IND"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "V_PRED",
+                    "expr": "V_IND"
+                }
+            ],
+            "INDIVIDUAL_VARIABLES": [
+                {
+                    ".subtype": "EquationDef",
+                    "name": "ts_IND",
+                    "expr": "GROUP_ts+eta_4[1]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "F_IND",
+                    "expr": "GROUP_F+eta_4[2]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "tl_IND",
+                    "expr": "GROUP_tl+eta_4[3]"
+                },
+                {
+                    ".subtype": "EquationDef",
+                    "name": "V_IND",
+                    "expr": "GROUP_V+eta_4[4]"
+                }
+            ]
+        },
+        "type": "mdlObj"
+    },
+    {
+        "name": "magni2000_NONMEM_task",
+        "blocks": {
+            "ESTIMATE": {
+                "algo": "foce",
+                "blocks": [
+                    
+                ]
+            }
+        },
+        "type": "taskObj"
+    },
+    {
+        "name": "magni2000_BUGS_task",
+        "blocks": {
+            "ESTIMATE": {
+                "algo": "mcmc",
+                "blocks": [
+                    {
+                        "TARGET_SETTINGS": {
+                            "nchains": "1",
+                            "burnin": "1000",
+                            "niter": "5000",
+                            "winbugsgui": "\"false\"",
+                            "blkAttrs": {
+                                "target": "\"BUGS\""
+                            }
+                        },
+                        ".subtype": "BlockStmt"
+                    }
+                ]
+            }
+        },
+        "type": "taskObj"
+    },
+    {
+        "name": "magni2000_BUGS_sim_task",
+        "blocks": {
+            "SIMULATE": {
+                "blocks": [
+                    {
+                        "TARGET_SETTINGS": {
+                            "niter": "1000",
+                            "blkAttrs": {
+                                "target": "\"BUGS\""
+                            }
+                        },
+                        ".subtype": "BlockStmt"
+                    }
+                ]
+            }
+        },
+        "type": "taskObj"
+    },
+    {
+        "name": "magni2000_NONMEM_sim_task",
+        "blocks": {
+            "SIMULATE": {
+                "blocks": [
+                    
+                ]
+            }
+        },
+        "type": "taskObj"
+    },
+    {
+        "name": "magni2000_M0_est_mog",
+        "blocks": {
+            "OBJECTS": [
+                {
+                    "magni2000_data": {
+                        "type": "dataObj"
+                    }
+                },
+                {
+                    "magni2000_M0_mdl": {
+                        "type": "mdlObj"
+                    }
+                },
+                {
+                    "magni2000_par": {
+                        "type": "parObj"
+                    }
+                },
+                {
+                    "magni2000_NONMEM_task": {
+                        "type": "taskObj"
+                    }
+                }
+            ]
+        },
+        "type": "mogObj"
+    }
+]

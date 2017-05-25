@@ -1,0 +1,491 @@
+# MAGNI 2000
+# The model describes Model#0 and Model#4 of the original publication.
+# They share the same dataset
+# Model#0 can be used for ML estimation and simulation
+# Model#4 can be used for Bayesian estimation and simulation
+#
+# Limitations:
+# none
+#
+# Compatibility:
+# NONMEM (Model#0) and WinBUGS (Model#4)
+#
+# Datasets:
+# 1) Van Cauter dataset for estimation
+# 2) A dataset constructed from Table 3 of the paper, used for simulation
+# 3) An additional dataset, used for simulation, is used to provide empirical prior distribution of all the parameters
+#    which are obtained from the posterior distributions in previous Bayesian estimation
+#
+# By Elisa Borella, Letizia Carrara, Silvia Lavezzi, Paolo Magni, Giulia Muzio, Lorenzo Pasotti, Elena Tosca
+# BMS lab - Univ Pavia
+#
+
+
+magni2000_data = dataObj{
+
+DECLARED_VARIABLES{Y1::observation Y2::observation Y3::observation Y4::observation}
+
+   DATA_INPUT_VARIABLES{
+      ID : { use is id }
+      TIME : { use is idv } #ALWAYS ZERO
+      DV : { use is dv, define = { 1 in DVID as Y1, 2 in DVID as Y2, 3 in DVID as Y3, 4 in DVID as Y4 } }
+      DVID : { use is dvid }
+      #HSTATUS : { use is catCov withCategories {normal when 0, obese when 1, diabetic when 2} } 
+      HSTATUS : { use is covariate }
+      #FEMALE : { use is catCov withCategories {yes when 1, no when 0} }
+      FEMALE : { use is covariate}
+      AGE : { use is covariate }
+      HEIGHT : { use is covariate }
+      WEIGHT : { use is covariate }
+      BMI_DATASET : { use is ignore }
+      BSA_DATASET : { use is ignore }
+   }
+   
+   SOURCE{
+       srcfile: {file = "data_van_cauter.csv", 
+            	  inputFormat is nonmemFormat#, 
+            	  #ignore="@"
+            	}
+   }
+}
+
+
+magni2000_par = parObj{
+	STRUCTURAL{
+		mtsn : {value = 5}
+		mtso : {value = 5}
+		mtsd : {value = 5}
+		mFn : {value = 1}
+		mFo : {value = 1}
+		mFd : {value = 1}
+		atl : {value = 30}
+		btl : {value = 1}
+		aVm : {value = 1}
+		bVm : {value = 1}
+		aVf : {value = 1}
+		bVf : {value = 1}
+	}
+	VARIABILITY{
+		ADD1 : {value = 1, lo = 0}
+		ADD2 : {value = 0.01, lo = 0}
+		ADD3 : {value = 6, lo = 0}
+		ADD4 : {value = 1, lo = 0}
+	}
+}
+
+
+magni2000_pri = priorObj{
+	
+	PRIOR_PARAMETERS{
+	  	MU_mtsn = 5
+		MU_mtso = 5
+		MU_mtsd = 5
+		MU_mFn = 1
+		MU_mFo = 1
+		MU_mFd = 1
+		MU_atl = 30
+		MU_btl = 1
+		MU_aVm = 1
+		MU_bVm = 1
+		MU_aVf = 1
+		MU_bVf = 1
+		
+		VAR_mtsn = 5^2
+		VAR_mtso = 5^2
+		VAR_mtsd = 5^2
+		VAR_mFn = 1
+		VAR_mFo = 1
+		VAR_mFd = 1
+		VAR_atl = 30^2
+		VAR_btl = 1
+		VAR_aVm = 1
+		VAR_bVm = 1
+		VAR_aVf = 1
+		VAR_bVf = 1
+		
+		R = inverse([[0.5, 0, 0, 0;
+		0, 0.1, 0, 0;
+		0, 0, 3, 0;
+		0, 0, 0, 0.4]])
+		rho = 10
+	}
+	
+	PRIOR_VARIABLE_DEFINITION{
+		mtsn ~ Normal(mean=MU_mtsn, var=VAR_mtsn)
+		mtso ~ Normal(mean=MU_mtso, var=VAR_mtso)
+		mtsd ~ Normal(mean=MU_mtsd, var=VAR_mtsd)
+		mFn ~ Normal(mean=MU_mFn, var=VAR_mFn)
+		mFo ~ Normal(mean=MU_mFo, var=VAR_mFo)
+		mFd ~ Normal(mean=MU_mFd, var=VAR_mFd)
+		atl ~ Normal(mean=MU_atl, var=VAR_atl)
+		btl ~ Normal(mean=MU_btl, var=VAR_btl)
+		aVm ~ Normal(mean=MU_aVm, var=VAR_aVm)
+		bVm ~ Normal(mean=MU_bVm, var=VAR_bVm)
+		aVf ~ Normal(mean=MU_aVf, var=VAR_aVf)
+		bVf ~ Normal(mean=MU_bVf, var=VAR_bVf)
+		
+		invOMEGA_PAR ~ Wishart1(scaleMatrix=R, degreesOfFreedom=rho)
+		MATRIX_1 = inverse(invOMEGA_PAR)
+		
+		ADD_SMALL=1E-20
+	}
+}
+
+
+
+magni2000_pri_sim = priorObj{
+	NON_CANONICAL_DISTRIBUTION{
+
+		INPUT_PRIOR_DATA{
+			:: {matrixVar = data_par_joint, src=data1, column=[	"data_mtsn",
+																"data_mtso",
+																"data_mtsd",
+																"data_mFn",
+																"data_mFo",
+																"data_mFd",
+																"data_atl",
+																"data_btl",
+																"data_aVm",
+																"data_bVm",
+																"data_aVf",
+																"data_bVf",
+																"data_VAR_ts",
+																"data_VAR_F",
+																"data_VAR_tl",
+																"data_VAR_V",
+																"data_COV_ts_F",
+																"data_COV_ts_tl",
+																"data_COV_F_tl",
+																"data_COV_tl_V"]}
+		}
+
+		PRIOR_SOURCE{
+
+			data1 : { file="prior_magni2000.csv", inputFormat is csv,
+						column=[								"data_mtsn",
+																"data_mtso",
+																"data_mtsd",
+																"data_mFn",
+																"data_mFo",
+																"data_mFd",
+																"data_atl",
+																"data_btl",
+																"data_aVm",
+																"data_bVm",
+																"data_aVf",
+																"data_bVf",
+																"data_VAR_ts",
+																"data_VAR_F",
+																"data_VAR_tl",
+																"data_VAR_V",
+																"data_COV_ts_F",
+																"data_COV_ts_tl",
+																"data_COV_F_tl",
+																"data_COV_ts_V",
+																"data_COV_F_V",
+																"data_COV_tl_V"]}
+		}
+	}
+
+	PRIOR_VARIABLE_DEFINITION{
+		data_par_joint :: matrix
+		par_joint ~ MultiEmpirical(data=data_par_joint)
+		
+		mtsn = par_joint[1]
+		mtso = par_joint[2]
+		mtsd = par_joint[3]
+		mFn = par_joint[4]
+		mFo = par_joint[5]
+		mFd = par_joint[6]
+		atl = par_joint[7]
+		btl = par_joint[8]
+		aVm = par_joint[9]
+		bVm = par_joint[10]
+		aVf = par_joint[11]
+		bVf = par_joint[12]
+		
+		VAR_ts = par_joint[13]
+		VAR_F = par_joint[14]
+		VAR_tl = par_joint[15]
+		VAR_V = par_joint[16]
+		COV_ts_F = par_joint[17]
+		COV_ts_tl = par_joint[18]
+		COV_F_tl = par_joint[19]
+		COV_ts_V = par_joint[20]
+		COV_F_V = par_joint[21]
+		COV_tl_V = par_joint[22]
+		
+		
+		MATRIX_1 = [[VAR_ts, COV_ts_F, COV_ts_tl, COV_ts_V;COV_ts_F, VAR_F, COV_F_tl, COV_F_V;COV_ts_tl, COV_F_tl, VAR_tl, COV_tl_V;COV_ts_V, COV_F_V, COV_tl_V, VAR_V]]
+		invOMEGA_PAR = inverse(MATRIX_1)
+		
+		ADD_SMALL=1E-20
+	}
+}
+
+
+
+magni2000_M0_mdl = mdlObj{
+ 	
+ 	IDV {T}
+ 	
+ 	COVARIATES{
+		#HSTATUS withCategories {normal, obese, diabetic}
+		#FEMALE withCategories {yes, no}
+		HSTATUS
+		FEMALE
+		AGE
+		WEIGHT
+		HEIGHT
+	}
+ 	
+ 	VARIABILITY_LEVELS{
+   		DV : { level=1, type is observation }
+    }
+	
+	STRUCTURAL_PARAMETERS{
+		mtsn
+		mtso
+		mtsd
+		mFn
+		mFo
+		mFd
+		atl
+		btl
+		aVm
+		bVm
+		aVf
+		bVf
+	}
+	
+	VARIABILITY_PARAMETERS{
+		ADD1
+		ADD2
+		ADD3
+		ADD4
+	}
+		
+   	
+   	GROUP_VARIABLES {
+   	
+	   	BSA = (WEIGHT^0.425)*(HEIGHT^0.725)*0.20247
+   	
+   		#GROUP_ts = if (HSTATUS==HSTATUS.normal) then mtsn
+   		#	 	   else if (HSTATUS==HSTATUS.obese) then mtso
+   		#	 	   else mtsd;
+   			 
+   		#GROUP_F = if (HSTATUS==HSTATUS.normal) then mFn
+   		#		  else if (HSTATUS==HSTATUS.obese) then mFo
+   		#		  else mFd;
+   			
+   		GROUP_tl = atl+btl*AGE
+   		
+   		#GROUP_V = if(FEMALE==FEMALE.no) then aVm+bVm*BSA
+   		#		  else aVf+bVf*BSA
+   				  
+ 		GROUP_ts = if (HSTATUS==0) then mtsn
+   			 	   elseif (HSTATUS==1) then mtso
+   			 	   elseif (HSTATUS==2) then mtsd
+   			 
+   		GROUP_F = if (HSTATUS==0) then mFn
+   				  elseif (HSTATUS==1) then mFo
+   				  elseif (HSTATUS==2) then mFd
+   			
+   		GROUP_V = if(FEMALE==0) then aVm+bVm*BSA
+   				  else aVf+bVf*BSA
+   	}
+	
+   RANDOM_VARIABLE_DEFINITION(level=DV){
+		EPS1  ~ Normal(mean=0, var=1)
+		EPS2  ~ Normal(mean=0, var=1)
+		EPS3  ~ Normal(mean=0, var=1)
+		EPS4  ~ Normal(mean=0, var=1)
+   }
+   
+  
+	MODEL_PREDICTION {
+		ts_PRED = GROUP_ts
+		F_PRED = GROUP_F
+		tl_PRED = GROUP_tl
+		V_PRED = GROUP_V
+	}	
+   
+   
+   OBSERVATION {	
+		Y1 : { type is additiveError, additive = ADD1, eps = EPS1, prediction = ts_PRED }
+		Y2 : { type is additiveError, additive = ADD2, eps = EPS2, prediction = F_PRED }
+		Y3 : { type is additiveError, additive = ADD3, eps = EPS3, prediction = tl_PRED }
+		Y4 : { type is additiveError, additive = ADD4, eps = EPS4, prediction = V_PRED }
+ 	}
+}
+
+
+
+magni2000_M4_mdl = mdlObj{
+ 	
+ 	IDV {T}
+ 	
+ 	COVARIATES{
+		#HSTATUS withCategories {normal, obese, diabetic}
+		#FEMALE withCategories {yes, no}
+		HSTATUS
+		FEMALE
+		AGE
+		WEIGHT
+		HEIGHT
+	}
+ 	
+ 	VARIABILITY_LEVELS{
+   		DV : { level=1, type is observation }
+   		ID : { level=2, type is parameter }
+    }
+	
+	STRUCTURAL_PARAMETERS{
+		mtsn
+		mtso
+		mtsd
+		mFn
+		mFo
+		mFd
+		atl
+		btl
+		aVm
+		bVm
+		aVf
+		bVf
+	}
+	
+	VARIABILITY_PARAMETERS{
+		ADD_SMALL
+		invOMEGA_PAR::matrix
+	}
+		
+   	
+   	GROUP_VARIABLES {
+   	
+	   	BSA = (WEIGHT^0.425)*(HEIGHT^0.725)*0.20247
+   	
+   		#GROUP_ts = if (HSTATUS==HSTATUS.normal) then mtsn
+   		#	 	   else if (HSTATUS==HSTATUS.obese) then mtso
+   		#	 	   else mtsd;
+   			 
+   		#GROUP_F = if (HSTATUS==HSTATUS.normal) then mFn
+   		#		  else if (HSTATUS==HSTATUS.obese) then mFo
+   		#		  else mFd;
+   			
+   		GROUP_tl = atl+btl*AGE
+   		
+   		#GROUP_V = if(FEMALE==FEMALE.no) then aVm+bVm*BSA
+   		#		  else aVf+bVf*BSA
+   				  
+ 		GROUP_ts = if (HSTATUS==0) then mtsn
+   			 	   elseif (HSTATUS==1) then mtso
+   			 	   elseif (HSTATUS==2) then mtsd
+   			 
+   		GROUP_F = if (HSTATUS==0) then mFn
+   				  elseif (HSTATUS==1) then mFo
+   				  elseif (HSTATUS==2) then mFd
+   			
+   		GROUP_V = if(FEMALE==0) then aVm+bVm*BSA
+   				  else aVf+bVf*BSA
+   	}
+   	
+   	INDIVIDUAL_VARIABLES{    	
+    	ts_IND = GROUP_ts + eta_4[1]
+		F_IND = GROUP_F + eta_4[2]
+		tl_IND = GROUP_tl + eta_4[3]
+		V_IND = GROUP_V + eta_4[4]
+   	}
+   	
+   RANDOM_VARIABLE_DEFINITION(level=ID){
+   		eta_4 ~ MultivariateNormal2(mean=[0,0,0,0], precisionMatrix=invOMEGA_PAR)
+   }
+	
+   RANDOM_VARIABLE_DEFINITION(level=DV){
+		EPS  ~ Normal(mean=0, var=1)
+   }
+   
+  
+	MODEL_PREDICTION {
+		ts_PRED = ts_IND
+		F_PRED = F_IND
+		tl_PRED = tl_IND
+		V_PRED = V_IND
+	}	
+   
+   
+   OBSERVATION {	
+		Y1 : { type is additiveError, additive = ADD_SMALL, eps = EPS, prediction = ts_PRED }
+		Y2 : { type is additiveError, additive = ADD_SMALL, eps = EPS, prediction = F_PRED }
+		Y3 : { type is additiveError, additive = ADD_SMALL, eps = EPS, prediction = tl_PRED }
+		Y4 : { type is additiveError, additive = ADD_SMALL, eps = EPS, prediction = V_PRED }
+ 	}
+}
+
+magni2000_NONMEM_task = taskObj{ 
+  ESTIMATE {
+    	set algo is foce
+	}
+}
+
+magni2000_BUGS_task = taskObj{ 
+  ESTIMATE {
+    	set algo is mcmc
+        TARGET_SETTINGS(target="BUGS"){
+            set
+            nchains = 1,
+            burnin = 1000,
+            niter = 5000,
+        	winbugsgui="false"
+        }
+	}
+}
+
+magni2000_BUGS_sim_task = taskObj{ 
+  SIMULATE {
+        TARGET_SETTINGS(target="BUGS"){
+            set
+            niter = 1000
+        }
+	}
+}
+
+magni2000_NONMEM_sim_task = taskObj{ 
+  SIMULATE {}
+}
+
+magni2000_M0_est_mog =mogObj {
+	OBJECTS{
+		magni2000_data : { type is dataObj }
+		magni2000_M0_mdl : { type is mdlObj }
+		magni2000_par : { type is parObj }
+		magni2000_NONMEM_task : { type is taskObj }
+	}
+}
+
+#magni2000_M4_est_mog =mogObj {
+#	OBJECTS{
+#		magni2000_data : { type is dataObj }
+#		magni2000_M4_mdl : { type is mdlObj }
+#		magni2000_pri : { type is priorObj }
+#		magni2000_BUGS_task : { type is taskObj }
+#	}
+#}
+
+#magni2000_M0_sim_mog =mogObj {
+#	OBJECTS{
+#		magni2000_data : { type is dataObj }
+#		magni2000_M4_mdl : { type is mdlObj }
+#		magni2000_pri_sim : { type is priorObj }
+#		magni2000_NONMEM_sim_task : { type is taskObj }
+#	}
+#}
+
+#magni2000_M4_sim_mog =mogObj {
+#	OBJECTS{
+#		magni2000_data : { type is dataObj }
+#		magni2000_M4_mdl : { type is mdlObj }
+#		magni2000_pri_sim : { type is priorObj }
+#		magni2000_BUGS_sim_task : { type is taskObj }
+#	}
+#}

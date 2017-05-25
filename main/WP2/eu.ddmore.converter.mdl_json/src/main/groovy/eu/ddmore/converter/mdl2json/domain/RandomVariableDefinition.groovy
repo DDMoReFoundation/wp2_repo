@@ -18,7 +18,7 @@ package eu.ddmore.converter.mdl2json.domain
 import eu.ddmore.converter.mdl2json.utils.KeyValuePairConverter
 import eu.ddmore.mdl.mdl.NamedFuncArguments
 import eu.ddmore.mdl.mdl.ValuePair
-import eu.ddmore.mdl.utils.MdlExpressionConverter;
+import eu.ddmore.converter.mdl2json.utils.MdlExpressionConverter
 
 /**
  * Represents {@link eu.ddmore.mdl.mdl.RandomVariableDefinition}, a subclass of {@link eu.ddmore.mdl.mdl.Statement},
