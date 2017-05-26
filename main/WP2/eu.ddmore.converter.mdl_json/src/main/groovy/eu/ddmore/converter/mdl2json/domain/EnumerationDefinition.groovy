@@ -15,10 +15,15 @@
  *******************************************************************************/
 package eu.ddmore.converter.mdl2json.domain
 
+import javax.xml.bind.GetPropertyAction
+
+import org.apache.log4j.rewrite.PropertyRewritePolicy
+
 import eu.ddmore.converter.mdl2json.utils.KeyValuePairConverter;
 import eu.ddmore.mdl.mdl.CategoricalDefinitionExpr;
 import eu.ddmore.mdl.mdl.CategoryValueDefinition;
 import eu.ddmore.mdl.mdl.ValuePair
+import eu.ddmore.converter.mdl2json.utils.MdlExpressionConverter
 
 /**
  * Represents {@link eu.ddmore.mdl.mdl.EnumerationDefinition}, a subclass of
@@ -39,6 +44,8 @@ public class EnumerationDefinition extends AbstractStatement {
     
     public final static String PROPERTY_NAME = "name"
     public final static String PROPERTY_CATEGORIES = "categories"
+	public final static String PROPERTY_DISTN = "distn"
+	
 
     /**
      * Constructor creating from MDL grammar objects.
@@ -54,6 +61,9 @@ public class EnumerationDefinition extends AbstractStatement {
                     CategoryValueDefinition catValDefn -> catValDefn.getName() // No mappedTo in this context
                 })
         }
+		if(enumDefn.getDistn()){
+			setProperty(PROPERTY_DISTN, MdlExpressionConverter.convertToString(enumDefn.getDistn()))
+		}
     }
     
     /**
@@ -76,6 +86,10 @@ public class EnumerationDefinition extends AbstractStatement {
             sb.append(getProperty(PROPERTY_CATEGORIES).join(", "))
             sb.append("}")
         }
+		if(getProperty(PROPERTY_DISTN)){
+			sb.append(" ~ ")
+			sb.append(getProperty(PROPERTY_DISTN))
+		}
         sb.toString()
     }
         

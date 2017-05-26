@@ -20,7 +20,7 @@ import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.util.EcoreUtil;
 
 import eu.ddmore.converter.mdl2json.domain.Mcl
-import eu.ddmore.converter.mdl2json.utils.VectorAttributeRewrite
+import eu.ddmore.converter.mdl2json.treerewrite.VectorAttributeRewrite
 import eu.ddmore.convertertoolbox.api.domain.LanguageVersion
 import eu.ddmore.convertertoolbox.api.domain.Version
 import eu.ddmore.convertertoolbox.api.response.ConversionReport

@@ -60,7 +60,24 @@ class MdlFileContentTestUtils {
         "SIMULATE",
         "OBJECTS",
         "DEQ", // Sub-block within MODEL_PREDICTION
-        "COMPARTMENT" // Sub-block within MODEL_PREDICTION
+        "COMPARTMENT", // Sub-block within MODEL_PREDICTION
+		"POPULATION_PARAMETERS",
+		"INFO",
+		"EVALUATE",
+		"OPTIMISE",
+		"TARGET_SETTINGS",
+		"FUNCTIONS",
+		"INTERVENTION",
+		"STUDY_DESIGN",
+		"SAMPLING",
+		"DESIGN_SPACES",
+		"DESIGN_PARAMETERS",
+		"PRIOR_PARAMETERS",
+		"NON_CANONICAL_DISTRIBUTION",
+		"PRIOR_VARIABLE_DEFINITION",
+		"INPUT_PRIOR_DATA",
+		"PRIOR_SOURCE",
+		"POPULATION"
     ]
 	
     /**
@@ -107,7 +124,7 @@ class MdlFileContentTestUtils {
             if (blockName == "OBJECTS") {
                 origMdlFileBlockContent = putMogObjectsBlockContentInKnownOrder(origMdlFileBlockContent)
                 newMdlFileBlockContent = putMogObjectsBlockContentInKnownOrder(newMdlFileBlockContent)
-            } else if (blockName == "ESTIMATE" || blockName == "SIMULATE") {
+            } else if (blockName == "ESTIMATE" || blockName == "SIMULATE"||blockName == "OPTIMISE" || blockName == "EVALUATE") {
                 origMdlFileBlockContent = putTaskObjectBlocksContentInKnownOrder(blockName, origMdlFileBlockContent)
                 newMdlFileBlockContent = putTaskObjectBlocksContentInKnownOrder(blockName, newMdlFileBlockContent)
             }
@@ -116,10 +133,12 @@ class MdlFileContentTestUtils {
             origMdlFileBlockContent = origMdlFileBlockContent.replaceAll(/(?s)\s*/, "")
             newMdlFileBlockContent = newMdlFileBlockContent.replaceAll(/(?s)\s*/, "")
             
-            // The original MDL file might have an empty block(s) for this blockName; this is treated the same
-            // as if the block is absent, and the written out MDL won't have this empty block(s), so remove it
-            origMdlFileBlockContent = origMdlFileBlockContent.replaceAll(blockName + /\{\}/, "")
-
+			// check if the same.  If not assume block is omitted if it is empty.
+			if(!origMdlFileBlockContent.equals(newMdlFileBlockContent)){
+	            // The original MDL file might have an empty block(s) for this blockName; this is treated the same
+	            // as if the block is absent, and the written out MDL won't have this empty block(s), so remove it
+	            origMdlFileBlockContent = origMdlFileBlockContent.replaceAll(blockName + /\{\}/, "")
+			}
             assertEquals("Checking the content of the block " + blockName, origMdlFileBlockContent, newMdlFileBlockContent)
         }
     }
@@ -139,7 +158,8 @@ class MdlFileContentTestUtils {
         rdr.eachLine() { String str ->
             removeCommentFromLineOfMDL(str, 0, strBuf)
         }
-        strBuf.toString().replaceAll(/(?s);\s*/, " ")
+        strBuf.toString().replaceAll(/(?![^\[\]]*\]\]);\s*/, " ")
+//        strBuf.toString().replaceAll(/(?s);\s*/, " ")
     }
 
     /**
@@ -268,7 +288,7 @@ class MdlFileContentTestUtils {
         final Matcher blockTextContentMatcher = blockText =~ /(?s)\s*([A-Za-z0-9_\(\)=\s]+?)\s*\{(.*)\}/
         while (blockTextContentMatcher.find()) { // Only one match expected
             blockName = blockTextContentMatcher.group(1)
-            if ("MODEL_PREDICTION".equals(blockName)) {
+            if ("MODEL_PREDICTION".equals(blockName) || "NON_CANONICAL_DISTRIBUTION".equals(blockName)) {
                 blockTextContent = replaceModelPredictionSubBlocksWithPlaceholders(blockTextContentMatcher.group(2))
             } else {
                 blockTextContent = blockTextContentMatcher.group(2)
@@ -291,7 +311,7 @@ class MdlFileContentTestUtils {
         // brackets; the "?" after the ".+" instructs the matcher to lazily match rather than
         // greedily match, otherwise the matcher would keep going until it found the last closing
         // bracket rather than the one that matched the opening bracket.
-        def outStr2 = sortParameterList(outStr1, ( outStr1 =~ /(?s)\{\s*(.+?)\s*\}/ ))
+        def outStr2 = sortParameterList(outStr1, ( outStr1 =~ /(?s)\{\s*([^\}]+)\s*\}/ ))
         // Explanation of this regex:
         // This regex is a more complicated version of the previous one, that captures the list
         // of distribution parameters i.e. for a distribution variable "VAR ~ Normal(...)",
@@ -519,6 +539,10 @@ class MdlFileContentTestUtils {
             if (LOGGER.isTraceEnabled() && !paramStr.equals(newParamStr)) {
                 LOGGER.trace("Trimmed leading and trailing zeros: " + paramStr + " -> " + newParamStr)
             }
+            final String newParamStr2 = newParamStr.replaceAll(/^([A-Za-z0-9_]+=)(-?)0*(:?([0-9]*\.[0-9]*[1-9]+)|([0-9]+)\.)0*[Ee](-?)0*([0-9]+)$/, "\$1\$2\$4\$5E\$6\$7")
+            if (LOGGER.isTraceEnabled() && !newParamStr.equals(newParamStr2)) {
+                LOGGER.trace("Trimmed sceintific notation leading and trailing zeros: " + newParamStr + " -> " + newParamStr2)
+            }
             newParamStr
         }
     }
@@ -594,7 +618,7 @@ class MdlFileContentTestUtils {
     private static String replaceModelPredictionSubBlocksWithPlaceholders(final String blockTextContent) {
         String outStr = blockTextContent
         
-        for (final String modelPredictionSubBlockName : [ "DEQ", "COMPARTMENT" ]) {
+        for (final String modelPredictionSubBlockName : [ "DEQ", "COMPARTMENT", "INPUT_PRIOR_DATA", "PRIOR_SOURCE" ]) {
             
             // Note that extractSpecificBlock() actually returns a list to allow for multiple matching blocks
             final List<String> subBlockTextFragments = extractSpecificBlock(blockTextContent, modelPredictionSubBlockName)

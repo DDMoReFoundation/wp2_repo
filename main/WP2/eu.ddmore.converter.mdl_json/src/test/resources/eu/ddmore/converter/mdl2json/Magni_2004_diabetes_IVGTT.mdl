@@ -169,7 +169,7 @@ magni2004_mdl = mdlObj{
 
      OBSERVATION{
      #combined error model with small additive parameter to avoid problems in estimation
-		Y : { type is combinedError1, additive=0.0001, proportional = CV, eps = eps_RES_CP1, prediction = CP1 }
+		Y : { type is combinedError1, additive=1.0E-4, proportional = CV, eps = eps_RES_CP1, prediction = CP1 }
 	}
 }
 
@@ -185,12 +185,11 @@ magni2004_BUGS_task = taskObj{
 	ESTIMATE{
 		set algo is mcmc
         TARGET_SETTINGS(target="BUGS"){
-            set 
-            nchains = 1,
-            burnin = 1000,
-            niter = 5000,
-            odesolver="LSODA",
-        	winbugsgui="false"
+            set burnin = 1000
+            set nchains = 1
+            set niter = 5000
+            set odesolver="LSODA"
+        	set winbugsgui="false"
         }
 	}
 }

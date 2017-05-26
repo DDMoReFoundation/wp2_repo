@@ -74,10 +74,10 @@ simeoni2004_mdl = mdlObj{
       K21_POP
       V1_POP
       PSI_POP
+	  CV
 	}
 	
 	VARIABILITY_PARAMETERS{
-	  CV
      }
 		
 	INDIVIDUAL_VARIABLES{

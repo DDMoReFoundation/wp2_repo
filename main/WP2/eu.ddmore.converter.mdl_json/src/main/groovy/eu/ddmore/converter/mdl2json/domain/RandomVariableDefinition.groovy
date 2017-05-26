@@ -45,7 +45,8 @@ public class RandomVariableDefinition extends AbstractStatement {
     public final static String PROPERTY_ARGS = "args"
 	// Initially for Product 5, store as string (e.g. "Normal(mean=0, sd=PPV_V)") with this key; TODO: split into DIST_TYPE and DISTN components 
 	public final static String PROPERTY_DISTN = "distn"
-
+	public final static String PROPERTY_TRANSFORM = "transform"
+	
     /**
      * Constructor creating from MDL grammar objects.
      * <p>
@@ -54,6 +55,9 @@ public class RandomVariableDefinition extends AbstractStatement {
     public RandomVariableDefinition(final eu.ddmore.mdl.mdl.RandomVariableDefinition randomVarDefn) {
         setProperty(PROPERTY_SUBTYPE, EStatementSubtype.RandomVarDefinition.getIdentifierString())
         setProperty(PROPERTY_NAME, randomVarDefn.getName())
+		if(randomVarDefn.getTransform()){
+			setProperty(PROPERTY_TRANSFORM, randomVarDefn.getTransform())
+		}
 		// TODO: Try and split this into 'distType' and 'args' components 
 		setProperty(PROPERTY_DISTN, MdlExpressionConverter.convertToString(randomVarDefn.getDistn()))
 // TODO: Commented out as BuiltinFunctionCall no longer exists - rework this
@@ -76,7 +80,16 @@ public class RandomVariableDefinition extends AbstractStatement {
         final StringBuffer sb = new StringBuffer()
         sb.append(IDT)
         sb.append(IDT)
-        sb.append(getProperty(PROPERTY_NAME))
+		if(getProperty(PROPERTY_TRANSFORM)){
+			sb.append(getProperty(PROPERTY_TRANSFORM))
+			sb.append("(")
+			sb.append(getProperty(PROPERTY_NAME))
+			sb.append(")")
+	
+		}
+		else{
+			sb.append(getProperty(PROPERTY_NAME))
+		}
         sb.append(" ~ ")
 		sb.append(getProperty(PROPERTY_DISTN))
 		// TODO: Reinstate this once split into 'distType' and 'args' components

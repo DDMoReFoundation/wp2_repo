@@ -19,16 +19,21 @@ import static org.junit.Assert.*
 import static eu.ddmore.converter.mdl2json.MdlAndJsonFileUtils.*
 import static eu.ddmore.converter.mdl2json.testutils.MdlFileContentTestUtils.*
 import eu.ddmore.converter.mdl2json.domain.Mcl
+import org.junit.rules.TemporaryFolder;
 
 import org.apache.commons.io.FileUtils
 import org.apache.commons.lang.StringUtils
 import org.apache.log4j.Logger
 import org.junit.Ignore;
+import org.junit.Rule
 import org.junit.Test
 
 class EndToEndIntegrationTest {
     private static final Logger LOGGER = Logger.getLogger(EndToEndIntegrationTest.class)
     
+	@Rule
+	public TemporaryFolder tmpDir = new TemporaryFolder()
+	
     /**
      * Tests for the the presence of the top-level objects in the JSON representation of an MDL file:
      * <ul>
@@ -106,30 +111,103 @@ class EndToEndIntegrationTest {
         }
     }
     
-    /**
-     * The JSON file "FullyPopulated.json" was created by reading in the above-mentioned
-     * "FullyPopulated.mdl" file into R (via the MDL->JSON converter) and writing it back
-     * out to JSON. Hence this test is a form of end-to-end integration test testing a
-     * full MDL->JSON->R->JSON->MDL pipeline.
-     */
-    @Test
-	@Ignore("Need to re-generate from R")
-    public void readMdlFileFromJSON() {
-        
-        final File origMdlFile = getFile("FullyPopulated.mdl")
-        
-        def json = getJson(FileUtils.readFileToString(getFile("FullyPopulated.output.json")))
-        
-        def mclFromJson = new Mcl(json)
-        def outputMdl = mclFromJson.toMDL()
-        
-        LOGGER.debug(outputMdl)
-        
-        ALL_BLOCK_NAMES.each { blockName ->
-            LOGGER.info("About to process block " + blockName + "...")
-            assertMDLBlockEqualityIgnoringWhitespaceAndComments(origMdlFile, blockName, outputMdl)
-        }
-    }
+	@Test
+	public void roundtripComparisonFromMdl_DesignObj_StudyDesign() {
+		final File origMdlFile = getFile("DesignObj_StudyDesign.mdl")
+		
+		def json = getJsonFromMDLFile(origMdlFile)
+		
+		def mclFromJson = new Mcl(json)
+		def outputMdl = mclFromJson.toMDL()
+		
+		LOGGER.debug(outputMdl)
+		
+		
+		ALL_BLOCK_NAMES.each { blockName ->
+			LOGGER.info("About to process block " + blockName + "...")
+			assertMDLBlockEqualityIgnoringWhitespaceAndComments(origMdlFile, blockName, outputMdl)
+		}
+	}
+
+	private assertRoundTripComparisonIsTheSame(URL origMdlFile){
+		File mdlCopy = tmpDir.newFile("testFile.mdl")
+		FileUtils.copyURLToFile(origMdlFile, mdlCopy)
+		
+		def json = getJsonFromMDLFile(mdlCopy)
+		
+		def mclFromJson = new Mcl(json)
+		def outputMdl = mclFromJson.toMDL()
+		
+		LOGGER.debug(outputMdl)
+		
+		
+		ALL_BLOCK_NAMES.each { blockName ->
+			LOGGER.info("About to process block " + blockName + "...")
+			assertMDLBlockEqualityIgnoringWhitespaceAndComments(mdlCopy, blockName, outputMdl)
+		}
+	}
+
+	@Test
+	public void useCase6RoundTripTest(){
+		def mdlFile = getClass().getResource("/test-models/MDL/Product5.1/UseCase6.mdl")
+		assertRoundTripComparisonIsTheSame(mdlFile)
+	}
+	
+	@Test
+	public void useCase1_PRIORRoundTripTest(){
+		def mdlFile = getClass().getResource("UseCase1_PRIOR.mdl")
+		assertRoundTripComparisonIsTheSame(mdlFile)
+	}
+	
+	@Test
+	public void useCase8RoundTripTest(){
+		def mdlFile = getClass().getResource("/test-models/MDL/Product5.1/UseCase8.mdl")
+		assertRoundTripComparisonIsTheSame(mdlFile)
+	}
+	
+	@Test
+	public void useCase9RoundTripTest(){
+		def mdlFile = getClass().getResource("/test-models/MDL/Product5.1/UseCase9.mdl")
+		assertRoundTripComparisonIsTheSame(mdlFile)
+	}
+	
+	@Test
+	public void useCase11RoundTripTest(){
+		def mdlFile = getClass().getResource("/test-models/MDL/Product5.1/UseCase11.mdl")
+		assertRoundTripComparisonIsTheSame(mdlFile)
+	}
+	
+	@Test
+	public void useCase12RoundTripTest(){
+		def mdlFile = getClass().getResource("/test-models/MDL/Product5.1/UseCase12.mdl")
+		assertRoundTripComparisonIsTheSame(mdlFile)
+	}
+	
+	@Test
+	public void useCase13RoundTripTest(){
+		def mdlFile = getClass().getResource("/test-models/MDL/Product5.1/UseCase13.mdl")
+		assertRoundTripComparisonIsTheSame(mdlFile)
+	}
+	
+	@Test
+	public void useCase14RoundTripTest(){
+		def mdlFile = getClass().getResource("/test-models/MDL/Product5.1/UseCase14.mdl")
+		assertRoundTripComparisonIsTheSame(mdlFile)
+	}
+	
+	@Test
+	public void useCaseM2000RoundTripTest(){
+		def mdlFile = getClass().getResource("Magni_2000_diabetes_C-peptide.mdl")
+		assertRoundTripComparisonIsTheSame(mdlFile)
+	}
+	
+	@Test
+	public void useCaseM2004RoundTripTest(){
+		def mdlFile = getClass().getResource("Magni_2004_diabetes_IVGTT.mdl")
+		assertRoundTripComparisonIsTheSame(mdlFile)
+	}
+	
+
     @Test
     public void readMdlFileFromJSON_DesignObj_StudyDesign() {
         final File origMdlFile = getFile("DesignObj_StudyDesign.mdl")

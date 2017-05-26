@@ -74,26 +74,27 @@ public class KeyValuePairConverter {
      * It delegates transformation to appropriate implementation of the 'toMDL' implementation and if such doesn't exist it simply invokes 'toString'.
      */
     public static String toMDL(List value) {
-        String result = value.sort().collect {
-            if(it.getMetaClass().getMetaMethod("toMDL", null)) {
-                return it.toMDL()
-            } else if(KeyValuePairConverter.getMetaClass().getMetaMethod("toMDL", it)) {
-                if(it instanceof Map) { 
-                    return "{" + KeyValuePairConverter.toMDL(it) + "}"
-                } else {
-                    return KeyValuePairConverter.toMDL(it)
-                }
-            } else {
-                return it.toString()
-            }
-        }.join(", ")
-        
-        // if the list is of size less or equal to one skip the square-brackets 
-        if(value.size() > 1) {
-            return "[" + result + "]"
-        } else {
-            return result
-        }
+//        String result = value.sort().collect {
+//            if(it.getMetaClass().getMetaMethod("toMDL", null)) {
+//                return it.toMDL()
+//            } else if(KeyValuePairConverter.getMetaClass().getMetaMethod("toMDL", it)) {
+//                if(it instanceof Map) { 
+//                    return "{" + KeyValuePairConverter.toMDL(it) + "}"
+//                } else {
+//                    return KeyValuePairConverter.toMDL(it)
+//                }
+//            } else {
+//                return it.toString()
+//            }
+//        }.join(", ")
+
+		value.toString()        
+//        // if the list is of size less or equal to one skip the square-brackets 
+//        if(value.size() > 1) {
+//            return "[" + result + "]"
+//        } else {
+//            return result
+//        }
     }
     
     public static toMDL(Object value) {

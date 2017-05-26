@@ -23,7 +23,7 @@ import org.apache.log4j.Logger
 import org.eclipse.emf.ecore.util.EcoreUtil
 
 import com.google.common.base.Preconditions
-import eu.ddmore.converter.mdl2json.utils.VectorAttributeRewrite
+import eu.ddmore.converter.mdl2json.treerewrite.VectorAttributeRewrite
 import eu.ddmore.convertertoolbox.api.response.ConversionReport
 import eu.ddmore.convertertoolbox.api.response.ConversionReport.ConversionCode
 import eu.ddmore.convertertoolbox.domain.ConversionReportImpl
@@ -85,19 +85,26 @@ class MdlAndJsonFileUtils {
         getJsonFromMDLFile(getFile(fileToConvert))
     }
 
+    public static Object getJsonStringFromMDLFile(final File srcFile) {
+		
+		final ConversionReport report = new ConversionReportImpl()
+		final eu.ddmore.mdl.mdl.Mcl orig = new MdlParser().parse(srcFile, report)
+		final eu.ddmore.mdl.mdl.Mcl mcl = expandShorthands(orig)
+
+		Preconditions.checkArgument(mcl != null,
+			"Unable to parse MDL file " + srcFile + "; check the log files for exceptions that might have been thrown")
+		Preconditions.checkArgument(!ConversionCode.FAILURE.equals(report.getReturnCode()),
+			"Unable to parse MDL file " + srcFile + "; check the log files for exceptions that might have been thrown")
+
+		String jsonText = toJson(mcl)
+		jsonText
+	}
+	
     public static Object getJsonFromMDLFile(final File srcFile) {
 
-        final ConversionReport report = new ConversionReportImpl()
-        final eu.ddmore.mdl.mdl.Mcl orig = new MdlParser().parse(srcFile, report)
-        final eu.ddmore.mdl.mdl.Mcl mcl = expandShorthands(orig)
-
-        Preconditions.checkArgument(mcl != null,
-            "Unable to parse MDL file " + srcFile + "; check the log files for exceptions that might have been thrown")
-        Preconditions.checkArgument(!ConversionCode.FAILURE.equals(report.getReturnCode()),
-            "Unable to parse MDL file " + srcFile + "; check the log files for exceptions that might have been thrown")
-
-        String jsonText = toJson(mcl)
-
+		String jsonText = getJsonStringFromMDLFile(srcFile) 
+		
+		
         Preconditions.checkArgument(StringUtils.isNotBlank(jsonText), "Unable to parse MDL file " + srcFile + " into JSON; check the log files for exceptions that might have been thrown")
 
         LOGGER.debug(jsonText)
@@ -130,7 +137,7 @@ class MdlAndJsonFileUtils {
 
         String ret = null
         jb wrappedMcl
-        ret = jb.toString()
+        ret = jb.toPrettyString()
 
         return JsonOutput.prettyPrint(ret)
     }

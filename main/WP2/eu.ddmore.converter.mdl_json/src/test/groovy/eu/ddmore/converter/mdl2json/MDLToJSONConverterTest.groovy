@@ -78,22 +78,22 @@ public class MDLToJSONConverterTest {
         assertFalse("No converted JSON file should have been created", jsonInvalidMdlFile.exists())
     }
 
-    @Test
-    public void testArrayHandling() throws IOException{
-    	URL mdlFile = getClass().getResource("Magni_2004_diabetes_IVGTT.mdl");
-        final ConversionReport report = converter.performConvert(new File(mdlFile.getFile()), workingFolder.getRoot());
-        assertEquals("Checking for failure return code", ConversionCode.SUCCESS, report.getReturnCode());
-    }
-    
-    @Test
-    public void testTypeDefnHandling() throws IOException{
-    	URL mdlFile = getClass().getResource("Magni_2000_diabetes_C-peptide.mdl");
-		File outFile = workingFolder.newFile();
-        final ConversionReport report = converter.performConvertToFile(new File(mdlFile.getFile()), outFile);
-		LOGGER.debug("Wrote to file: " + outFile.getPath());
-    	URL expectedJsonFile = getClass().getResource("Magni_2000_diabetes_C-peptide.json");
-		assertEquals("Files equals", FileUtils.readLines(new File(expectedJsonFile.getFile())), FileUtils.readLines(outFile))
+//    @Test
+//    public void testArrayHandling() throws IOException{
+//    	URL mdlFile = getClass().getResource("Magni_2004_diabetes_IVGTT.mdl");
+//        final ConversionReport report = converter.performConvert(new File(mdlFile.getFile()), workingFolder.getRoot());
 //        assertEquals("Checking for failure return code", ConversionCode.SUCCESS, report.getReturnCode());
-    }
+//    }
+//    
+//    @Test
+//    public void testTypeDefnHandling() throws IOException{
+//    	URL mdlFile = getClass().getResource("Magni_2000_diabetes_C-peptide.mdl");
+//		File outFile = workingFolder.newFile();
+//        final ConversionReport report = converter.performConvertToFile(new File(mdlFile.getFile()), outFile);
+//		LOGGER.debug("Wrote to file: " + outFile.getPath());
+//    	URL expectedJsonFile = getClass().getResource("Magni_2000_diabetes_C-peptide.json");
+//		assertEquals("Files equals", FileUtils.readLines(new File(expectedJsonFile.getFile())), FileUtils.readLines(outFile))
+////        assertEquals("Checking for failure return code", ConversionCode.SUCCESS, report.getReturnCode());
+//    }
     
 }

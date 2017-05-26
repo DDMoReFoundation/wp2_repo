@@ -2,16 +2,17 @@ warfarin_PK_SEX_design = designObj{
   DECLARED_VARIABLES{
   	INPUT_KA :: dosingTarget
   	INPUT_CENTRAL :: dosingTarget
-  	CC :: observation
+  	#CC :: observation
   	Y :: observation
   	SEX withCategories{female, male}
   }
 
   INTERVENTION{
  	admin1 : {type is bolus, input=INPUT_KA, amount=100, doseTime=[0] }
+ 	admin2 : {type is bolus, input=INPUT_CENTRAL, amount=100, doseTime=[0] }
   }
   SAMPLING{
-	window1 : {type is simple, sampleTime = [0.0001, 24, 36, 48, 72, 96, 120], outcome=CC }
+	window1 : {type is simple, sampleTime = [0.0001, 24, 36, 48, 72, 96, 120], outcome=Y }
   }
   
   POPULATION{
@@ -83,7 +84,7 @@ warfarin_PK_covariate_mdl = mdlObj {
 		tAGE = AGE - 40
 	}
 
-	VARIABILITY_LEVELS{
+	VARIABILITY_LEVELS(reference=ID){
 		ID : { level = 2, type is parameter }
 		DV : { level = 1, type is observation }
 	}
