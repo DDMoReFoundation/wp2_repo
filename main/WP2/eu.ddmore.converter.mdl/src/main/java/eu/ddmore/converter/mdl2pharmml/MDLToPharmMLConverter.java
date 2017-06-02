@@ -38,6 +38,7 @@ public class MDLToPharmMLConverter implements ConverterProvider {
     private LanguageVersion target;
     private Version converterVersion;
     private final boolean useAbsolutePathsFlag;
+    private boolean ensureRelativeDataPath = false;
 
     public MDLToPharmMLConverter() {
     	this(false);
@@ -60,6 +61,15 @@ public class MDLToPharmMLConverter implements ConverterProvider {
     public boolean isAbsolutePathsEnabled(){
     	return this.useAbsolutePathsFlag;
     }
+    
+    public void setEnsureRelativeDataPath(boolean yes){
+    	this.ensureRelativeDataPath = yes;
+    }
+    
+    public boolean isEnsureRelativeDataPath(){
+    	return this.ensureRelativeDataPath;
+    }
+    
 
     @Override
     public ConversionReport performConvert(File src, File outputDirectory) throws IOException {
@@ -88,9 +98,12 @@ public class MDLToPharmMLConverter implements ConverterProvider {
             if (mog==null) {
             	throw new IllegalStateException("Must be (at least) one MOG defined in the provided MCL file: " + src); 
             }
-    
-            final CharSequence converted = new Mdl2Pharmml().convertToPharmML(mog, src.getParent());
-            
+            CharSequence converted = null;
+            if(isEnsureRelativeDataPath())
+            	converted = new Mdl2Pharmml().convertToPharmML(mog, src.getParent());
+            else
+            	converted = new Mdl2Pharmml().convertToPharmML(mog);
+            	
             final File outputFile = new File(outputDirectory.getAbsoluteFile(), FilenameUtils.getBaseName(src.getName()) + ".xml");
             
             try {
@@ -132,7 +145,12 @@ public class MDLToPharmMLConverter implements ConverterProvider {
             	throw new IllegalStateException("Must be (at least) one MOG defined in the provided MCL file: " + src); 
             }
     
-            final CharSequence converted = new Mdl2Pharmml().convertToPharmML(mog);
+            CharSequence converted;
+            if(isEnsureRelativeDataPath())
+            	converted = new Mdl2Pharmml().convertToPharmML(mog, src.getParent());
+            else
+            	converted = new Mdl2Pharmml().convertToPharmML(mog);
+
             
             try {
                 FileUtils.writeStringToFile(outputFile, converted.toString());
