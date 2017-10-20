@@ -15,17 +15,17 @@
     <name>Converter Provider: MDL to JSON</name>
 
     <properties>
-        <xtend.repo.url>http://build.eclipse.org/common/xtend/maven/</xtend.repo.url>
+        <!--xtend.repo.url>http://build.eclipse.org/common/xtend/maven/</xtend.repo.url-->
         <xtend.version>2.9.1</xtend.version>
 		<xtendGenDirectory>src/main/generated-sources/xtend</xtendGenDirectory>
     </properties>
 
-    <repositories>
+    <!--repositories>
         <repository>
             <id>xtend</id>
             <url>${xtend.repo.url}</url>
         </repository>
-    </repositories>
+    </repositories-->
 
     <dependencies>
         <dependency>
