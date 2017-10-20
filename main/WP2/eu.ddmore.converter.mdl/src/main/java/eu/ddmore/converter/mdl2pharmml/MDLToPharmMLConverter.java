@@ -37,16 +37,9 @@ public class MDLToPharmMLConverter implements ConverterProvider {
     private LanguageVersion source;
     private LanguageVersion target;
     private Version converterVersion;
-    private final boolean useAbsolutePathsFlag;
-    private boolean ensureRelativeDataPath = false;
+    private boolean ensureAbsoluteDataPath = false;
 
-    public MDLToPharmMLConverter() {
-    	this(false);
-    }
-    
-    
-    public MDLToPharmMLConverter(boolean absPathFlag) {
-    	this.useAbsolutePathsFlag = absPathFlag;
+    public MDLToPharmMLConverter(){
     	
         Version sourceVersion = new VersionImpl(8, 0, 0);
         source = new LanguageVersionImpl("MDL", sourceVersion);
@@ -58,16 +51,17 @@ public class MDLToPharmMLConverter implements ConverterProvider {
         converterVersion = new VersionImpl(0, 4, 0);
     }
     
-    public boolean isAbsolutePathsEnabled(){
-    	return this.useAbsolutePathsFlag;
+    /**
+     * Tells the converter to generate a path for any dependent files that is relative to the current file location.
+     * Any generated file will then contain a valid path to the dependent file.  Typically such files are data files.   
+     * @param yes  toggles this on of off.
+     */
+    public void setEnsureAbsoluteDataPath(boolean yes){
+    	this.ensureAbsoluteDataPath = yes;
     }
     
-    public void setEnsureRelativeDataPath(boolean yes){
-    	this.ensureRelativeDataPath = yes;
-    }
-    
-    public boolean isEnsureRelativeDataPath(){
-    	return this.ensureRelativeDataPath;
+    public boolean isEnsureAbsoluteDataPath(){
+    	return this.ensureAbsoluteDataPath;
     }
     
 
@@ -99,7 +93,7 @@ public class MDLToPharmMLConverter implements ConverterProvider {
             	throw new IllegalStateException("Must be (at least) one MOG defined in the provided MCL file: " + src); 
             }
             CharSequence converted = null;
-            if(isEnsureRelativeDataPath())
+            if(isEnsureAbsoluteDataPath())
             	converted = new Mdl2Pharmml().convertToPharmML(mog, src.getParent());
             else
             	converted = new Mdl2Pharmml().convertToPharmML(mog);
@@ -146,7 +140,7 @@ public class MDLToPharmMLConverter implements ConverterProvider {
             }
     
             CharSequence converted;
-            if(isEnsureRelativeDataPath())
+            if(isEnsureAbsoluteDataPath())
             	converted = new Mdl2Pharmml().convertToPharmML(mog, src.getParent());
             else
             	converted = new Mdl2Pharmml().convertToPharmML(mog);
