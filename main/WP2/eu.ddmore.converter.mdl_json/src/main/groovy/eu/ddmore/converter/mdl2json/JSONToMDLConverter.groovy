@@ -45,7 +45,7 @@ public class JSONToMDLConverter implements ConverterProvider {
     private final Version converterVersion = new VersionImpl(0, 3, 0);
 
 	@Override
-	public ConversionReport performConvertToFile(File src, File tgtFile){
+	public ConversionReport performConvertToFile(File src, File outputFile){
 		JsonSlurper jsonSlurper = new JsonSlurper();
 		Mcl mclFile = new Mcl(jsonSlurper.parseText(src.getText()))
 
