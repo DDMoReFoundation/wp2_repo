@@ -147,7 +147,7 @@ public class MDLToPharmMLConverter implements ConverterProvider {
 
             
             try {
-                FileUtils.writeStringToFile(outputFile, converted.toString());
+                FileUtils.writeStringToFile(outputFile.getAbsoluteFile(), converted.toString());
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
